@@ -1,0 +1,174 @@
+﻿@{
+    ViewData["Title"] = "User details";
+
+    var email = Model?.Email ?? "Unknown";
+
+    var user_name = Model?.User_Name ?? "Unknown";
+    var profile_Picture = Model?.Profile_Picture ?? "https://i.pinimg.com/736x/0f/68/94/0f6894e539589a50809e45833c8bb6c4.jpg";
+    var bg_Picture = Model?.Bg_Picture ?? "https://i.pinimg.com/736x/50/1a/43/501a430ff76b05322856c9075e9475cb.jpg";
+
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@user_name's Profile</title>
+    <link rel="preconnected" href="https://fonts.googleapis.com">
+    <link rel="preconnected" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="~/css/profile.css?v=1.0" />
+</head>
+<body>
+    <div class="profile-header" style=" background: linear-gradient(rgba(26, 42, 58, 0.7), rgba(26, 42, 58, 0.7)), url(@bg_Picture) no-repeat center center/cover">
+        <div class="profile-avatar" style="background:url(@profile_Picture) no-repeat center center/cover"></div>
+    </div>
+
+    <div class="profile-container">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2>@user_name</h2>
+                <p class="text-muted"><i class="fas fa-calendar-alt me-2"></i>Joined in August 2024 <span class="mx-2">|</span> <i class="fas fa-circle text-success me-2" style="font-size: 10px;"></i>Active this week</p>
+            </div>
+            <button type="button" class="btn btn-outline-primary" onclick="location.href='@Url.Action("Edit", "Profile")'">
+                <i class="fas fa-user-edit me-2"></i>Edit Profile
+            </button>
+
+        </div>
+    
+        <div class="profile-section">
+            <h3 class="section-title">Want to Read <span class="badge-count">3</span></h3>
+            <div class="row">
+                <div class="col-6 col-md-4 col-lg-3 col-xl-2">
+                    <div class="book-card">
+                        <img src="https://r2.1k-cdn.com/sig/size:384/plain/https%3A%2F%2F1k-cdn.com%2Fresimler%2Fkitaplar%2F92217_2af75_1568650642.jpg" alt="The Poppy War">
+                        <p class="book-title">The Poppy War</p>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3 col-xl-2">
+                    <div class="book-card">
+                        <img src="https://r2.1k-cdn.com/sig/size:384/plain/https%3A%2F%2F1k-cdn.com%2Fresimler%2Fkitaplar%2F1199080_1700393429_taKyL.jpg" alt="Welcome to the Hyunam-Dong Bookshop">
+                        <p class="book-title">Welcome to the Hyunam-Dong Bookshop</p>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3 col-xl-2">
+                    <div class="book-card">
+                        <img src="https://r2.1k-cdn.com/sig/size:384/plain/https%3A%2F%2F1k-cdn.com%2Fresimler%2Fkitaplar%2F868078_1711963806_A5bJ4.jpg" alt="Shogun">
+                        <p class="book-title">Shogun</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-section">
+            <h3 class="section-title">Have Read <span class="badge-count">2</span></h3>
+            <div class="row">
+                <div class="col-6 col-md-4 col-lg-3 col-xl-2">
+                    <div class="book-card">
+                        <img src="https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1546419325i/12913540.jpg" alt="Jane Eyre">
+                        <p class="book-title">Jane Eyre</p>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3 col-xl-2">
+                    <div class="book-card">
+                        <img src="https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1609035271i/41804.jpg" alt="I, Robot">
+                        <p class="book-title">I, Robot</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-section">
+            <h3 class="section-title">Recent Reviews</h3>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="review-card">
+                        <h4>Rated <span class="stars">★★★★☆</span></h4>
+                        <div class="book-info">
+                            <img src="https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1546419325i/12913540.jpg" alt="Jane Eyre">
+                            <div class="book-meta">
+                                <p>Jane Eyre</p>
+                                <p>by Charlotte Brontë</p>
+                            </div>
+                        </div>
+                        <div class="review-text">
+                            <p>"Jane Eyre is the quintessential Victorian novel, featuring one of literature's most memorable heroines. Brontë's masterpiece combines gothic elements with feminist undertones..."</p>
+                        </div>
+                        <div class="text-end text-muted mt-2">
+                            <small><i class="far fa-clock me-1"></i>2 weeks ago</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="review-card">
+                        <h4>Rated <span class="stars">★★★★★</span></h4>
+                        <div class="book-info">
+                            <img src="https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1320399351i/1885.jpg" alt="Pride and Prejudice">
+                            <div class="book-meta">
+                                <p>Pride and Prejudice</p>
+                                <p>by Jane Austen</p>
+                            </div>
+                        </div>
+                        <div class="review-text">
+                            <p>"Pride and Prejudice is one of the most famous romantic novels of all time. Austen's wit and social commentary shine through Elizabeth Bennet's journey..."</p>
+                        </div>
+                        <div class="text-end text-muted mt-2">
+                            <small><i class="far fa-clock me-1"></i>1 month ago</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @* <div class="text-center mt-3"> *@
+            @*     <button class="btn btn-outline-secondary">View All Reviews <i class="fas fa-arrow-right ms-2"></i></button> *@
+            @* </div> *@
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            const animateOnScroll = function() {
+                const elements = document.querySelectorAll('.profile-section, .book-card, .review-card');
+
+                elements.forEach(element => {
+                    const elementPosition = element.getBoundingClientRect().top;
+                    const windowHeight = window.innerHeight;
+
+                    if (elementPosition < windowHeight - 100) {
+                        element.style.opacity = '1';
+                        element.style.transform = 'translateY(0)';
+                    }
+                });
+            };
+
+            const cards = document.querySelectorAll('.book-card, .review-card');
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'all 0.5s ease';
+            });
+
+            const sections = document.querySelectorAll('.profile-section');
+            sections.forEach(section => {
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(30px)';
+                section.style.transition = 'all 0.7s ease';
+            });
+
+            animateOnScroll();
+            window.addEventListener('scroll', animateOnScroll);
+
+            const interactiveElements = document.querySelectorAll('.book-card, .review-card, .btn');
+            interactiveElements.forEach(el => {
+                el.addEventListener('mouseenter', function() {
+                    this.style.cursor = 'pointer';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

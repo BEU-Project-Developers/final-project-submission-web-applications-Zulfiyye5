@@ -1,0 +1,125 @@
+:root {
+    --cloud: #F9F3E9;
+    --sky: #B8D8EB;
+    --leaf: #A7D7C5;
+    --accent: #FF9AA2;
+    --wood: #8B6B4D;
+    --deep-blue: #1A2A3A;
+    --moonlight: #E8E8FF;
+    --lavender: #B8B8FF;
+    --dusty-pink: #D8B4A0;
+    --gold: #FFD166;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: var(--deep-blue);
+    color: white;
+    overflow-x: hidden;
+}
+
+h1, h2, h3, h4 {
+    font-family: 'Playfair Display', serif;
+}
+
+.cat-section {
+    border-radius: 2rem;
+    padding: 4rem 2rem;
+    margin: 4rem auto;
+    transition: all 0.4s ease;
+    border: 1px solid var(--lavender);
+    background: rgba(26, 42, 58, 0.7);
+}
+
+    .cat-section:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(184, 184, 255, 0.1);
+    }
+
+.cat-hero {
+    background: linear-gradient(135deg, var(--deep-blue) 0%, #2c3e50 100%);
+}
+
+.cat-features {
+    background: linear-gradient(135deg, #1A2A3A 0%, #2A3A4A 100%);
+}
+
+.cat-goals {
+    background: linear-gradient(135deg, #2A3A4A 0%, #3A4A5A 100%);
+}
+
+.cat-community {
+    background: linear-gradient(135deg, #3A4A5A 0%, #4A5A6A 100%);
+}
+
+.cat-img {
+    max-width: 100%;
+    height: auto;
+    filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.3));
+    transition: all 0.3s ease;
+}
+
+    .cat-img:hover {
+        transform: scale(1.05) rotate(-2deg);
+        filter: drop-shadow(0 15px 20px rgba(0, 0, 0, 0.4));
+    }
+
+.book-card {
+    transition: all 0.3s ease;
+    text-decoration: none;
+    margin-bottom: 1.5rem;
+}
+
+    .book-card:hover {
+        transform: translateY(-10px);
+    }
+
+    .book-card img {
+        border-radius: 8px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        transition: all 0.3s ease;
+        height: 220px;
+        object-fit: cover;
+    }
+
+.book-title {
+    margin-top: 0.8rem;
+    font-weight: 600;
+    color: white;
+}
+
+.feature-point {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    border-radius: 1rem;
+    transition: all 0.3s ease;
+}
+
+    .feature-point:hover {
+        background: rgba(184, 184, 255, 0.1);
+    }
+
+    .feature-point i {
+        font-size: 1.8rem;
+        color: var(--accent);
+        margin-right: 1rem;
+        margin-top: 0.3rem;
+    }
+
+.btn-custom {
+    background-color: var(--accent);
+    color: white;
+    border: none;
+    padding: 0.8rem 2rem;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+    .btn-custom:hover {
+        background-color: #ff7b8a;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 15px rgba(255, 154, 162, 0.3);
+    }

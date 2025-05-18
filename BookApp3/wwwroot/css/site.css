@@ -1,0 +1,128 @@
+:root {
+    --cloud: #F9F3E9;
+    --sky: #B8D8EB;
+    --leaf: #A7D7C5;
+    --accent: #FF9AA2;
+    --wood: #8B6B4D;
+    --deep-blue: #1A2A3A;
+    --moonlight: #E8E8FF;
+    --lavender: #B8B8FF;
+    --dusty-pink: #D8B4A0;
+    --gold: #FFD166;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--deep-blue);
+    color: var(--moonlight);
+    margin: 0;
+    line-height: 1.6;
+    background-image: url('data:image/svg+xml;utf8,<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="20" cy="20" r="2" fill="%23B8B8FF" opacity="0.2"/><circle cx="50" cy="30" r="1.5" fill="%23B8B8FF" opacity="0.2"/><circle cx="70" cy="10" r="2" fill="%23B8B8FF" opacity="0.2"/><circle cx="90" cy="50" r="1" fill="%23B8B8FF" opacity="0.2"/><circle cx="30" cy="80" r="1.5" fill="%23B8B8FF" opacity="0.2"/></svg>');
+}
+
+nav {
+    padding: 1.2rem 2.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(5px);
+    border-bottom: 1px solid rgba(180, 180, 255, 0.2);
+}
+
+.nav-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    color: var(--gold);
+    margin: 0;
+    letter-spacing: 1px;
+}
+
+.nav-bar-texts {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.search-container {
+    display: flex;
+    align-items: center;
+    background: rgba(180, 180, 255, 0.1);
+    border-radius: 30px;
+    padding: 0.6rem 1.2rem;
+    width: 280px;
+    max-width: 100%;
+    border: 1px solid rgba(180, 180, 255, 0.3);
+    transition: all 0.3s;
+}
+
+    .search-container:hover {
+        border-color: var(--lavender);
+    }
+
+    .search-container input {
+        border: none;
+        background: transparent;
+        width: 100%;
+        padding: 0.5rem;
+        color: var(--moonlight);
+        font-family: 'Poppins', sans-serif;
+    }
+
+        .search-container input::placeholder {
+            color: rgba(228, 230, 235, 0.6);
+        }
+
+        .search-container input:focus {
+            outline: none;
+        }
+
+    .search-container button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--lavender);
+        font-size: 1.1rem;
+    }
+
+.nav-links {
+    display: flex;
+    gap: 2rem;
+    margin-left: 50px;
+    align-self: center;
+    margin-top: 10px;
+}
+
+    .nav-links a {
+        color: var(--moonlight);
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 0.95rem;
+        letter-spacing: 0.5px;
+        position: relative;
+        opacity: 0.9;
+        transition: all 0.3s;
+    }
+
+        .nav-links a:hover {
+            color: var(--lavender);
+            opacity: 1;
+        }
+
+        .nav-links a::after {
+            content: "";
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--lavender);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }

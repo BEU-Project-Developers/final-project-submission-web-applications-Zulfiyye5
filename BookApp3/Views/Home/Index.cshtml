@@ -1,0 +1,236 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+@model IEnumerable<Book>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="preconnected" href="https://fonts.googleapis.com">
+    <link rel="preconnected" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="~/css/home.css?v=1.0" />
+</head>
+<body>
+    <main class="container py-4">
+
+        <section class="cat-section cat-hero row align-items-center">
+            <div class="col-md-6 order-md-1 order-2">
+                <h1 class="display-4 mb-4">Discover Your Next Favorite Book!</h1>
+                <p class="lead mb-4">Join our literary-loving felines in exploring worlds between pages.</p>
+
+                <a href="@Url.Action("Index", "AllBooks")" class="btn btn-custom me-2">
+                    View All Books <i class="fas fa-arrow-right ms-2"></i>
+                </a>
+
+
+            </div>
+            <div class="col-md-6 order-md-2 order-1 text-center">
+                <img src="~/images/cat1.png" alt="Cat reading" class="cat-img img-fluid" style="max-height: 350px;">
+            </div>
+        </section>
+
+
+        <section class="cat-section cat-features">
+            <div class="row align-items-center">
+                <div class="col-lg-5 text-center mb-4 mb-lg-0">
+                    <img src="~/images/cat2.png" alt="Cat with books" class="cat-img img-fluid" style="max-height: 300px;">
+                </div>
+                <div class="col-lg-7">
+                    <h2 class="mb-4"><i class="fas fa-star me-2"></i> Why Book Haven?</h2>
+
+                    <div class="feature-point">
+                        <i class="fas fa-book-open"></i>
+                        <div>
+                            <h4>Curated Recommendations</h4>
+                            <p>Our algorithm suggests perfect reads just for you.</p>
+                        </div>
+                    </div>
+
+                    <div class="feature-point">
+                        <i class="fas fa-users"></i>
+                        <div>
+                            <h4>Community Reviews</h4>
+                            <p>See what fellow readers think about each title.</p>
+                        </div>
+                    </div>
+
+                    <div class="feature-point">
+                        <i class="fas fa-chart-line"></i>
+                        <div>
+                            <h4>Reading Analytics</h4>
+                            <p>Track your progress with beautiful visualizations.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="cat-section cat-goals row align-items-center">
+            <div class="col-md-6 text-center mb-4 mb-md-0">
+                <img src="~/images/cat3.png" alt="Goal-setting cat" class="cat-img img-fluid" style="max-height: 320px;">
+            </div>
+            <div class="col-md-6">
+                <h2 class="mb-4"><i class="fas fa-bullseye me-2"></i> Set Reading Goals</h2>
+                <p class="lead mb-4">We'll help you stay on track with your reading!</p>
+
+                <div class="d-flex align-items-center mb-3">
+                    <i class="fas fa-check-circle text-success me-3 fs-4"></i>
+                    <div>
+                        <h4 class="mb-0">Yearly Challenges</h4>
+                        <p>Join our 52-book challenge or set a custom goal</p>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-center mb-3">
+                    <i class="fas fa-trophy text-warning me-3 fs-4"></i>
+                    <div>
+                        <h4 class="mb-0">Achievement Badges</h4>
+                        <p>Earn badges for reading milestones</p>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-calendar-alt text-info me-3 fs-4"></i>
+                    <div>
+                        <h4 class="mb-0">Daily Reminders</h4>
+                        <p>Get notifications to keep you reading</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        @* <section class="cat-section cat-community"> *@
+        @*     <div class="row align-items-center"> *@
+        @*         <div class="col-lg-6 mb-4 mb-lg-0"> *@
+        @*             <h2 class="mb-4"><i class="fas fa-users me-2"></i> Join Our Bookish Clowder</h2> *@
+        @*             <p class="lead">Readers connecting through great books.</p> *@
+
+        @*             <div class="row mt-4"> *@
+        @*                 <div class="col-6 mb-3"> *@
+        @*                     <div class="d-flex align-items-center"> *@
+        @*                         <i class="fas fa-comment-dots text-primary me-3 fs-4"></i> *@
+        @*                         <div> *@
+        @*                             <h5 class="mb-0">Discussion Groups</h5> *@
+        @*                         </div> *@
+        @*                     </div> *@
+        @*                 </div> *@
+        @*                 <div class="col-6 mb-3"> *@
+        @*                     <div class="d-flex align-items-center"> *@
+        @*                         <i class="fas fa-bookmark text-danger me-3 fs-4"></i> *@
+        @*                         <div> *@
+        @*                             <h5 class="mb-0">Shared Bookshelves</h5> *@
+        @*                         </div> *@
+        @*                     </div> *@
+        @*                 </div> *@
+        @*                 <div class="col-6 mb-3"> *@
+        @*                     <div class="d-flex align-items-center"> *@
+        @*                         <i class="fas fa-paw text-warning me-3 fs-4"></i> *@
+        @*                         <div> *@
+        @*                             <h5 class="mb-0">Special Events</h5> *@
+        @*                         </div> *@
+        @*                     </div> *@
+        @*                 </div> *@
+        @*                 <div class="col-6 mb-3"> *@
+        @*                     <div class="d-flex align-items-center"> *@
+        @*                         <i class="fas fa-gift text-success me-3 fs-4"></i> *@
+        @*                         <div> *@
+        @*                             <h5 class="mb-0">Monthly Giveaways</h5> *@
+        @*                         </div> *@
+        @*                     </div> *@
+        @*                 </div> *@
+        @*             </div> *@
+        @*         </div> *@
+        @*         <div class="col-lg-6 text-center"> *@
+        @*             <img src="~/images/cat4.png" alt="Community cat" class="cat-img img-fluid" style="max-height: 350px;"> *@
+        @*         </div> *@
+        @*     </div> *@
+        @* </section> *@
+        <section class="my-5 py-5">
+            <h2 class="text-center mb-5"><i class="fas fa-book me-3"></i> Recently Added Books</h2>
+            <div class="row">
+                @foreach (var book in Model)
+                {
+                    <div class="col-6 col-md-4 col-lg-3 col-xl-2">
+                        <a href="@Url.Action("Index", "BookDetails", new { id = book.Book_Id })" class="book-card text-center d-block">
+                            <img src="@book.Cover_Url" alt="@book.Title" class="img-fluid mb-3">
+                            <h6 class="book-title">@book.Title</h6>
+                        </a>
+                    </div>
+                }
+            </div>
+            <div class="text-center mt-5">
+                <a href="@Url.Action("Index", "AllBooks")" class="btn btn-custom btn-lg">
+                    View All Books <i class="fas fa-arrow-right ms-2"></i>
+                </a>
+
+            </div>
+        </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function() {
+
+            const animateOnScroll = function() {
+                const elements = document.querySelectorAll('.cat-section, .book-card');
+
+                elements.forEach((element, index) => {
+                    const elementPosition = element.getBoundingClientRect().top;
+                    const windowHeight = window.innerHeight;
+
+                    if (elementPosition < windowHeight - 100) {
+                        element.style.opacity = '1';
+                        element.style.transform = 'translateY(0)';
+
+                        if (element.classList.contains('cat-section')) {
+                            element.style.transitionDelay = `${index * 0.1}s`;
+                        }
+                    }
+                });
+            };
+            const cards = document.querySelectorAll('.book-card');
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                card.style.transition = 'all 0.6s ease';
+            });
+
+            const catSections = document.querySelectorAll('.cat-section');
+            catSections.forEach(section => {
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(50px)';
+                section.style.transition = 'all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.1)';
+            });
+            animateOnScroll();
+            window.addEventListener('scroll', animateOnScroll);
+
+            const buttons = document.querySelectorAll('.btn-custom');
+            buttons.forEach(button => {
+                button.addEventListener('mouseenter', function() {
+                    this.querySelector('i')?.classList.add('fa-bounce');
+                });
+                button.addEventListener('mouseleave', function() {
+                    this.querySelector('i')?.classList.remove('fa-bounce');
+                });
+            });
+
+
+            const catImages = document.querySelectorAll('.cat-img');
+            catImages.forEach(img => {
+                img.addEventListener('mouseenter', function() {
+                    this.style.transform = 'scale(1.05) rotate(-5deg)';
+                });
+                img.addEventListener('mouseleave', function() {
+                    this.style.transform = 'scale(1) rotate(0)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

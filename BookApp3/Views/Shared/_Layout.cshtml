@@ -1,0 +1,73 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+@{
+    var isSignedIn = HttpContextAccessor.HttpContext.Session.GetString("UserId") != null;
+    var userName = HttpContextAccessor.HttpContext.Session.GetString("UserName");
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - BookApp</title>
+
+    <link rel="stylesheet" href="~/css/home.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+</head>
+<body>
+    <nav>
+        <div class="nav-bar-texts">
+            <h1 class="nav-title">Books </h1>
+            <div class="nav-links">
+      
+                <a asp-controller="Home" asp-action="Index">Home</a>
+                <a asp-controller="AllBooks" asp-action="Index">All Books</a>
+
+                @if (isSignedIn)
+                {
+                    <a asp-controller="Profile" asp-action="Index">My account</a>
+                    <a asp-controller="Account" asp-action="Logout">Log out</a>
+                 
+                }
+                else
+                {
+                    <a asp-controller="Account" asp-action="SignIn">Sign In</a>
+                }
+
+                @* <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between"> *@
+                @*     <ul class="navbar-nav flex-grow-1"> *@
+                @*         <li class="nav-item"> *@
+                @*             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a> *@
+                @*         </li> *@
+                @*         <li class="nav-item"> *@
+                @*             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a> *@
+                @*         </li> *@
+                @*     </ul> *@
+                @* </div> *@
+            </div>
+        </div>
+
+
+
+        <div class="search-container">
+            <input type="text" placeholder="Search books...">
+            <button style="color: var(--purple);">⌕</button>
+        </div>
+
+
+    </nav>
+    <main>
+
+        @RenderBody()
+    </main>
+
+
+
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

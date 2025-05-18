@@ -1,0 +1,97 @@
+﻿
+body {
+    color: var(--moonlight);
+    font-family: 'Montserrat', sans-serif;
+    background-color: var(--deep-blue);
+}
+
+.container {
+  
+    margin-top: 70px;
+    display: flex;
+    padding: 20px;
+    gap:3rem;
+ 
+   
+}
+
+.book-image img {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    border: 2px solid var(--lavender);
+    transition: transform 0.3s ease;
+}
+
+.left-column {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.right-column {
+    flex: 2;
+    min-width: 300px;
+    max-width:1000px;
+    padding-right:60px;
+}
+
+.author-image {
+
+
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+}
+
+    .author-image img {
+        width: 20rem;
+        height: 22rem;
+        border-radius: 10px;
+        transition: transform 0.3s ease;
+    }
+
+    .author-image:hover img {
+        transform: scale(1.02);
+    }
+
+.author-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: var(--lavender);
+    position: relative;
+    display: inline-block;
+}
+
+    .author-name::after {
+        content: "✍️";
+        margin-left: 10px;
+        opacity: 0.8;
+        font-size: 1.8rem;
+    }
+
+.author-meta {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.95rem;
+    color: var(--moonlight);
+}
+
+    .meta-item i {
+        color: var(--moonlight);
+        font-size: 1.1rem;
+    }
+
+.biography {
+    font-size: 1.1rem;
+    line-height: 1.8;
+ 
+  
+}

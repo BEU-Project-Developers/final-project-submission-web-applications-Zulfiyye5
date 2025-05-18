@@ -1,0 +1,5 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@{
+    var isAdmin = HttpContextAccessor.HttpContext.Session.GetString("UserName") == "admin";
+    Layout = isAdmin ? "~/Views/Shared/_LayoutAdmin.cshtml" : "~/Views/Shared/_Layout.cshtml";
+}

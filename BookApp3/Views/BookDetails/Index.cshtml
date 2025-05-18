@@ -1,0 +1,292 @@
+﻿@{
+    ViewData["Title"] = "Book details";
+
+    var title = Model?.Title ?? "Untitled Book";
+    var author = Model?.Author ?? null;
+    var coverUrl = Model?.Cover_Url ?? "/images/default-book.jpg";
+    var description = Model?.Description ?? "No description available.";
+    var firstPublish = Model?.First_Publish ?? "Unknown";
+    var pageCount = Model?.Page_Count.ToString() ?? "0";
+    var reviews = Model?.Reviews ?? new List<Review>();
+}
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+@{
+    var isSignedIn = HttpContextAccessor.HttpContext.Session.GetString("UserId") != null;
+    var userName = HttpContextAccessor.HttpContext.Session.GetString("UserName");
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="preconnected" href="https://fonts.googleapis.com">
+    <link rel="preconnected" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="~/css/bdetail.css?v=1.1" />
+</head>
+
+
+<body>
+    <main>
+        <div class="container">
+            <section class="left-column">
+                <div>
+                    <div class="book-image">
+                        <img src="@coverUrl" alt="@title">
+                    </div>
+                    <div class="button-container">
+                        <button class="main-button">
+                            <i class="far fa-heart"></i> Want to read
+                        </button>
+                        <button class="dropdown-button">▼</button>
+                    </div>
+                    <div class="rating-widget">
+                        <div class="stars">
+                            @if (isSignedIn)
+                            {
+                                var userRating = ViewData["UserRating"] as int?;
+                                
+                                for (int i = 1; i <= 5; i++)
+                                {
+                                    
+                                  
+
+                                    if (userRating.HasValue && i <= userRating.Value)
+                                    {
+                                        <i class="fas fa-star star filled" data-rating="@i"></i>
+                                    }
+                                    else
+                                    {
+                                        <i class="far fa-star star empty" data-rating="@i"></i>
+                                    }
+                                }
+                                if(!userRating.HasValue){
+                                    <div class="rate-text">Rate this book</div>
+                                }
+                                else{
+
+                                    <div class="rate-text">You rated this book</div>
+                                }
+
+
+                            }
+                            else
+                            {
+                              
+                                for (int i = 1; i <= 5; i++)
+                                {
+                                    <i class="far fa-star star empty" data-rating="@i"></i>
+                                }
+                            }
+                        </div>
+                    </div>
+                
+
+
+
+                </div>
+            </section>
+
+            <section class="right-column">
+                <div class="details">
+
+                    <div class="book-header">
+                        <h2 class="book-title">@title</h2>
+                        <a class="author-link" href="@Url.Action("Index", "AuthorInfo", new { id = author.Author_id })" >
+                            <h3 class="author-name">By @author.Name</h3></a>
+                    </div>
+
+
+                    <div class="book-meta">
+                        <span>📅 @firstPublish</span>
+                        <span>📖 @pageCount pages</span>
+                        <span>⭐ 4.5/5</span>
+                    </div>
+                    <p class="description">@description</p>
+                </div>
+
+                <section class="rating">
+                    <h3>What do you think?</h3>
+                    @if (isSignedIn)
+                    {
+                           <a href="@Url.Action("Index", "AddReview")" class="custom-button">Write Review</a>
+                    }
+                    else{
+                        <a href="@Url.Action("SignIn", "Account")" class="custom-button">Write Review</a>
+                    }
+
+                  
+
+                </section>
+
+                <h3>User Reviews</h3>
+                <div class="all-ratings">
+                    <div class="rate">
+                        <p>5 stars</p>
+                        <div class="progress-container">
+                            <div class="progress-bar star5" style="width: 45%;"></div>
+                        </div>
+                    </div>
+                    <div class="rate">
+                        <p>4 stars</p>
+                        <div class="progress-container">
+                            <div class="progress-bar star4" style="width: 35%;"></div>
+                        </div>
+                    </div>
+                    <div class="rate">
+                        <p>3 stars</p>
+                        <div class="progress-container">
+                            <div class="progress-bar star3" style="width: 15%;"></div>
+                        </div>
+                    </div>
+                    <div class="rate">
+                        <p>2 stars</p>
+                        <div class="progress-container">
+                            <div class="progress-bar star2" style="width: 10%;"></div>
+                        </div>
+                    </div>
+                    <div class="rate">
+                        <p>1 star</p>
+                        <div class="progress-container">
+                            <div class="progress-bar star1" style="width: 5%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reviews">
+                    @if (Model?.Reviews != null)
+                    {
+                        @foreach (var review in reviews)
+                        {
+                            <div class="review">
+                                <div class="user-info">
+                                    <div class="user-profile">
+                                        <img src="@review.User.Profile_Picture" alt="User profile">
+                                    </div>
+                                    <div class="@review.User.User_Name">BookLover</div>
+                                </div>
+                                <div class="review-content">
+                                    <div class="stars-container">
+                                    @if(review.Rating!=0){
+                                        @for (int i = 0; i < review.Rating; i++)
+                                        {
+                                            <span class="stars filled">★</span>
+                                        }
+
+                                        @for (int i = 0; i < 5 - review.Rating; i++)
+                                        {
+                                            <span class="stars empty">☆</span>
+                                        }
+                                    }
+                                   </div>
+                                    <p>@review.Review_Text</p>
+                                    <div class="review-date">Posted on March 15, 2023</div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p>No reviews available.</p>
+                    }
+
+                 
+                  
+
+                    @* <div class="review"> *@
+                    @*     <div class="user-info"> *@
+                    @*         <div class="user-profile"> *@
+                    @*             <img src="https://i.pinimg.com/736x/ee/c3/97/eec3973f23c2860186b9c6410970988b.jpg" alt="User profile"> *@
+                    @*         </div> *@
+                    @*         <div class="username">LiteraryFan</div> *@
+                    @*     </div> *@
+                    @*     <div class="review-content"> *@
+                    @*         <span class="stars">★★★★★</span> *@
+                    @*         <p>One of the best books I've read this year! Highly recommended.</p> *@
+                    @*         <div class="review-date">Posted on February 28, 2023</div> *@
+                    @*     </div> *@
+                    @* </div> *@
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        const isSignedIn = @((isSignedIn ? "true" : "false"));
+        document.addEventListener('DOMContentLoaded', function() {
+           const stars = document.querySelectorAll('.star');
+
+    stars.forEach(star => {
+        star.addEventListener('click', function() {
+            if (!isSignedIn) {
+                alert('Please sign in to rate this book.');
+                return;
+            }
+            
+            const rating = this.getAttribute('data-rating');
+            stars.forEach((s, index) => {
+                if (index < rating) {
+                    s.classList.remove('far');
+                    s.classList.add('fas', 'active');
+                } else {
+                    s.classList.remove('fas', 'active');
+                    s.classList.add('far');
+                }
+            });
+        });
+
+        star.addEventListener('mouseover', function() {
+            const rating = this.getAttribute('data-rating');
+            stars.forEach((s, index) => {
+                if (index < rating) {
+                    s.classList.add('hover');
+                } else {
+                    s.classList.remove('hover');
+                }
+            });
+        });
+
+        star.addEventListener('mouseout', function() {
+            stars.forEach(s => {
+                s.classList.remove('hover');
+            });
+        });
+    });
+
+            const animateOnScroll = function() {
+                const elements = document.querySelectorAll('.review, .rating-widget');
+
+                elements.forEach(element => {
+                    const elementPosition = element.getBoundingClientRect().top;
+                    const windowHeight = window.innerHeight;
+
+                    if (elementPosition < windowHeight - 100) {
+                        element.style.opacity = '1';
+                        element.style.transform = 'translateY(0)';
+                    }
+                });
+            };
+
+            const animatedElements = document.querySelectorAll('.review, .rating-widget');
+            animatedElements.forEach(element => {
+                element.style.opacity = '0';
+                element.style.transform = 'translateY(20px)';
+                element.style.transition = 'all 0.6s ease';
+            });
+
+            animateOnScroll();
+            window.addEventListener('scroll', animateOnScroll);
+
+
+
+
+        });
+    </script>
+</body>
+
+
+</html>

@@ -1,0 +1,267 @@
+﻿@model IEnumerable<BookApp3.Models.User>
+
+@{
+    ViewData["Title"] = "All Users";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="~/css/site.css?v=1.0" />
+    <style>
+        .btn-add {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+            .btn-add:hover {
+                background-color: #ff7b8a;
+                transform: translateY(-3px);
+                box-shadow: 0 8px 15px rgba(255, 154, 162, 0.3);
+            }
+
+        .add-book-btn {
+            margin-bottom: 30px;
+        }
+        body {
+            background-color: var(--deep-blue);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .user-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+            overflow: hidden;
+            height: 100%;
+        }
+
+            .user-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+            }
+
+        .user-avatar {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 3px solid #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-header {
+            background-size: cover;
+            background-position: center;
+            height: 100px;
+            position: relative;
+        }
+
+        .user-body {
+            padding: 20px;
+            position: relative;
+            margin-top: -50px;
+        }
+
+        .action-buttons .btn {
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+
+        .search-box {
+            max-width: 500px;
+            margin: 0 auto 30px;
+        }
+
+        .user-stats {
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+            margin: 15px 0;
+        }
+
+        .stat-item {
+            flex: 1;
+        }
+
+        .stat-value {
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="text-center mb-0"><i class="fas fa-book me-3"></i> All Users</h2>
+            <a href="#" class="btn btn-add add-book-btn">
+                <i class="fas fa-plus me-2"></i>Add New User
+            </a>
+        </div>
+
+        
+        @* <div class="search-box"> *@
+        @*     <div class="input-group"> *@
+        @*         <input type="text" class="form-control" placeholder="Search by name or email..." id="userSearch"> *@
+        @*         <button class="btn btn-outline-secondary" type="button" id="searchButton"> *@
+        @*             <i class="fas fa-search"></i> *@
+        @*         </button> *@
+        @*         <button class="btn btn-outline-danger" type="button" id="resetSearch"> *@
+        @*             <i class="fas fa-times"></i> *@
+        @*         </button> *@
+        @*     </div> *@
+        @* </div> *@
+
+   
+        <div class="row">
+            @foreach (var user in Model)
+            {
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="user-card">
+                      
+                        <div class="user-header" style="background-image: url('@(user.Bg_Picture ?? "https://via.placeholder.com/500x100")');">
+                        </div>
+
+                       
+                        <div class="user-body text-center">
+                            <img src="@(user.Profile_Picture ?? "https://via.placeholder.com/80")"
+                                 alt="@user.User_Name" class="user-avatar mb-3">
+
+                            <h5 class="mb-1">@user.User_Name</h5>
+                            <p class="text-muted mb-3">@user.Email</p>
+
+                            @if (!string.IsNullOrEmpty(user.Bio))
+                            {
+                                <p class="mb-3">@user.Bio</p>
+                            }
+
+                            <div class="user-stats">
+                                <div class="stat-item">
+                                    <div class="stat-value">@(user.Reviews?.Count ?? 0)</div>
+                                    <div class="stat-label">Reviews</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value">@(user.Birthdate?.ToString("yyyy-MM-dd") ?? "N/A")</div>
+                                    <div class="stat-label">Birthdate</div>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-center action-buttons">
+                                <a asp-action="Edit" asp-route-id="@user.User_Id"
+                                   class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-edit me-1"></i> Edit
+                                </a>
+                                <a asp-action="Details" asp-route-id="@user.User_Id"
+                                   class="btn btn-sm btn-outline-info">
+                                    <i class="fas fa-eye me-1"></i> Details
+                                </a>
+                                <button class="btn btn-sm btn-outline-danger delete-user"
+                                        data-userid="@user.User_Id" data-username="@user.User_Name">
+                                    <i class="fas fa-trash me-1"></i> Delete
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirm Delete</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete user: <strong id="userToDeleteName"></strong>?</p>
+                    <p class="text-danger">This action cannot be undone!</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="confirmDelete">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Delete confirmation
+        document.querySelectorAll('.delete-user').forEach(button => {
+            button.addEventListener('click', function() {
+                const userId = this.getAttribute('data-userid');
+                const userName = this.getAttribute('data-username');
+
+                document.getElementById('userToDeleteName').textContent = userName;
+
+                const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+                deleteModal.show();
+
+                document.getElementById('confirmDelete').onclick = function() {
+                    // Perform delete action
+                    fetch(`/Users/Delete/${userId}`, {
+                        method: 'POST',
+                        headers: {
+                            'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                        }
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            window.location.reload();
+                        } else {
+                            alert('Error deleting user');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+
+                    deleteModal.hide();
+                };
+            });
+        });
+
+        document.getElementById('searchButton').addEventListener('click', performSearch);
+        document.getElementById('userSearch').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') performSearch();
+        });
+        document.getElementById('resetSearch').addEventListener('click', function() {
+            document.getElementById('userSearch').value = '';
+            performSearch();
+        });
+
+        function performSearch() {
+            const searchTerm = document.getElementById('userSearch').value.toLowerCase();
+            document.querySelectorAll('.user-card').forEach(card => {
+                const userName = card.querySelector('h5').textContent.toLowerCase();
+                const userEmail = card.querySelector('.text-muted').textContent.toLowerCase();
+
+                if (userName.includes(searchTerm) || userEmail.includes(searchTerm)) {
+                    card.closest('.col-md-6').style.display = 'block';
+                } else {
+                    card.closest('.col-md-6').style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
