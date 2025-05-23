@@ -12,8 +12,9 @@ namespace BookApp3.Models
         public int Author_Id { get; set; }
         public int Page_Count { get; set; }
         public string First_Publish { get; set; }
-
+ 
         public Author Author { get; set; }
+
         public ICollection<Review> Reviews { get; set; }
     }
 

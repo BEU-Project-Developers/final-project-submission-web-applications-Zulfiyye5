@@ -131,14 +131,14 @@ namespace BookApp2.Controllers
                 return null;
             }
 
-            // Create directory if it doesn't exist
+            
             var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", folderName);
             if (!Directory.Exists(uploadsFolder))
             {
                 Directory.CreateDirectory(uploadsFolder);
             }
 
-            // Generate unique filename
+       
             var uniqueFileName = Guid.NewGuid().ToString() + "_" + Path.GetFileName(file.FileName);
             var filePath = Path.Combine(uploadsFolder, uniqueFileName);
 

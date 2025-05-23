@@ -1,9 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 namespace BookApp3.Models
 {
     public class User
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int User_Id { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
@@ -17,7 +19,13 @@ namespace BookApp3.Models
 
         public int? offSetY { get;set;}
 
+        public DateTime? JoinedIn { get;set;}
+
         public ICollection<Review> Reviews { get; set; }
+        public User()
+        {
+            Reviews = new List<Review>();
+        }
     }
 
 }

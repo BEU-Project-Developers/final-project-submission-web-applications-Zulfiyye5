@@ -253,7 +253,7 @@ input[type="text"] {
     margin-top: 0.5rem;
 }
 
-.button-container {
+ .button-container {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -262,6 +262,8 @@ input[type="text"] {
     width: 100%;
     margin-top: 1rem;
 }
+
+
 
 .main-button, .dropdown-button {
     background: rgba(180, 180, 255, 0.1);
@@ -305,7 +307,33 @@ input[type="text"] {
 .main-button:hover i {
     color: var(--gold);
 }
+.unified-button {
+    width: 100%;
+    text-align: center;
+}
 
+    .unified-button a {
+        display: block;
+        width: 100%;
+        border-radius: 30px;
+        text-align: center;
+        text-decoration: none;
+        cursor: default; /* Change to pointer if you want it clickable */
+    }
+
+        .unified-button a:hover {
+            background: rgba(180, 180, 255, 0.1); /* Less pronounced hover effect */
+            border-color: rgba(180, 180, 255, 0.3);
+            color: var(--moonlight);
+        }
+
+.main-button i {
+    transition: all 0.3s;
+}
+
+.main-button:hover i {
+    color: var(--gold);
+}
 .progress-container {
     width: 60%;
     height: 10px;
@@ -383,4 +411,49 @@ input[type="text"] {
     font-size: 1rem;
     margin-left:15px;
     color:white;
+}
+
+
+
+
+
+/* Unified button style when book is on a shelf */
+.unified-button {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+    .unified-button a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        background: rgba(180, 180, 255, 0.1);
+        color: var(--moonlight);
+        border: 1px solid rgba(180, 180, 255, 0.3);
+        font-weight: bold;
+        font-size: 16px;
+        padding: 12px 24px;
+        border-radius: 30px;
+        text-decoration: none;
+        height: 50px;
+        font-family: "Pixelify Sans", sans-serif;
+        font-optical-sizing: auto;
+        font-weight: 700;
+        font-style: normal;
+        transition: all 0.3s ease;
+        min-width: 200px;
+        text-align: center;
+    }
+
+        .unified-button a:hover {
+            background: rgba(180, 180, 255, 0.2);
+            border-color: var(--lavender);
+            color: var(--lavender);
+        }
+
+.unified-button {
+    height: 50px;
 }

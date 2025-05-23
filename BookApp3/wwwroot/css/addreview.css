@@ -1,98 +1,132 @@
-﻿body {
+﻿
+:root {
+    --deep-blue: #1a2a3a;
+    --lavender: #b8b8ff;
+    --accent: #9381ff;
+    --moonlight: #f8f7ff;
+    --gold: #ffd700;
+    --sky: #87ceeb;
+    --cloud: #e0f2fe;
+}
+
+body {
     font-family: 'Montserrat', sans-serif;
-    background-color: #f8f9fa;
-    color: #333;
-    line-height: 1.6;
-    padding: 20px;
+    background-color: var(--deep-blue);
+    color: white;
+    background: linear-gradient(rgba(26, 42, 58, 0.9), rgba(26, 42, 58, 0.9)), url('https://i.pinimg.com/736x/50/1a/43/501a430ff76b05322856c9075e9475cb.jpg') no-repeat center center fixed;
+    background-size: cover;
+    min-height: 100vh;
 }
 
-.review-edit-container {
-    max-width: 800px;
-    margin: 0 auto;
-    background: white;
+h1, h2, h3, h4 {
+    font-family: 'Playfair Display', serif;
+    color: white;
+}
+
+.review-container {
+    padding: 120px 50px;
+    margin-top: 20px;
+}
+
+.review-section {
+    background-color: rgba(42, 58, 74, 0.9);
+    border-radius: 15px;
     padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.breadcrumb-nav {
-    font-size: 14px;
-    color: #6c757d;
-    margin-bottom: 20px;
-}
-
-    .breadcrumb-nav a {
-        color: #6c757d;
-        text-decoration: none;
-    }
-
-        .breadcrumb-nav a:hover {
-            color: #2c3e50;
-            text-decoration: underline;
-        }
-
-.book-header {
-    display: flex;
     margin-bottom: 30px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid #eee;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--lavender);
+    transition: all 0.3s ease;
+    margin-top: -50px; /* Lift the section up */
+    position: relative;
+    z-index: 1;
 }
+
+    .review-section:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(184, 184, 255, 0.4);
+    }
 
 .book-cover {
-    margin-right: 20px;
+    width: 120px;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--lavender);
 }
 
-    .book-cover img {
-        width: 120px;
-        height: auto;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.stars {
+    color: var(--gold);
+    font-size: 1.5rem;
+    margin: 10px 0;
+}
+
+.form-control, .form-select {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--lavender);
+    color: white;
+}
+
+    .form-control:focus, .form-select:focus {
+        background-color: rgba(255, 255, 255, 0.2);
+        border-color: var(--accent);
+        color: white;
+        box-shadow: 0 0 0 0.25rem rgba(184, 184, 255, 0.25);
     }
 
-.book-info h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: 24px;
-    margin: 0 0 5px 0;
-    color: #2c3e50;
+.form-label {
+    color: var(--moonlight);
+    font-weight: 600;
 }
 
-.book-info h2 {
-    font-size: 16px;
-    color: #6c757d;
-    font-weight: normal;
-    margin: 0 0 10px 0;
+.btn-primary {
+    background-color: var(--accent);
+    border-color: var(--accent);
 }
 
-.change-edition {
-    font-size: 14px;
-    color: #3498db;
-    text-decoration: none;
-}
-
-    .change-edition:hover {
-        text-decoration: underline;
+    .btn-primary:hover {
+        background-color: var(--lavender);
+        border-color: var(--lavender);
     }
 
-.form-section {
-    margin-bottom: 30px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid #eee;
+.btn-outline-secondary {
+    border-color: var(--accent);
+    color: var(--accent);
 }
 
-    .form-section h3 {
-        font-size: 18px;
-        color: #2c3e50;
-        margin-bottom: 15px;
+    .btn-outline-secondary:hover {
+        background-color: var(--accent);
+        color: white;
     }
 
-.rating-stars {
-    display: flex;
-    direction: rtl;
-    justify-content: flex-start;
-    margin-bottom: 15px;
+.text-muted {
+    color: var(--sky) !important;
 }
 
-    .rating-stars input[type="radio"] {
-        display: none;
+.review-textarea {
+    min-height: 200px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--lavender);
+    color: white;
+    padding: 15px;
+    border-radius: 8px;
+    width: 100%;
+}
+
+    .review-textarea:focus {
+        outline: none;
+        background-color: rgba(255, 255, 255, 0.2);
+        border-color: var(--accent);
     }
 
-.rating-stars
+.page-header {
+    padding: 40px 50px 30px;
+    position: relative;
+}
+
+    .page-header h1 {
+        font-size: 2.5rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+

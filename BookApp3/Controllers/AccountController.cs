@@ -87,23 +87,21 @@ namespace BookApp3.Controllers
             return Json(new { offsetY = 0 });
         }
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult SignIn(string email, string password)
         {
-            var user = _context.Users.FirstOrDefault(u => u.Email == email && u.Password == password);
+            var user = _context.Users
+    .FirstOrDefault(u => u.Email != null && u.Password != null && u.Email == email && u.Password == password);
 
-            
+
             if (user != null)
             {
-
                 HttpContext.Session.SetString("UserId", user.User_Id.ToString());
                 HttpContext.Session.SetString("UserName", user.User_Name);
-                if(user.User_Name == "admin")
+                if (user.User_Name == "admin")
                 {
                     return RedirectToRoute("admin", new { controller = "AdminAllBooks", action = "Index" });
-
                 }
 
                 return RedirectToAction("Index", "Home");
@@ -112,6 +110,7 @@ namespace BookApp3.Controllers
             ViewBag.Message = "Invalid email or password";
             return View();
         }
+
 
         public ActionResult Logout()
         {

@@ -156,7 +156,7 @@
                 @foreach (var book in Model)
                 {
                     <div class="col-6 col-md-4 col-lg-3 col-xl-2">
-                        <a href="@Url.Action("Index", "BookDetails", new { id = book.Book_Id })" class="book-card text-center d-block">
+                        <a href="@Url.Action("Index", "BookDetails", new { id = book.Book_Id }) " class="book-card text-center d-block">
                             <img src="@book.Cover_Url" alt="@book.Title" class="img-fluid mb-3">
                             <h6 class="book-title">@book.Title</h6>
                         </a>

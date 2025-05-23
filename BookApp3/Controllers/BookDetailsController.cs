@@ -18,7 +18,6 @@ namespace BookApp2.Controllers
 
         public async Task<IActionResult> Index(int id)
         {
-
             var book = await _context.Books
                 .Include(b => b.Author)
                 .Include(b => b.Reviews)
@@ -29,20 +28,26 @@ namespace BookApp2.Controllers
             {
                 return NotFound();
             }
-            var userId = HttpContext.Session.GetString("UserId");
-            if (userId!=null)
+
+            var userIdString = HttpContext.Session.GetString("UserId");
+
+            if (!string.IsNullOrEmpty(userIdString) && int.TryParse(userIdString, out int userId))
             {
                 var userReview = await _context.Reviews
-          .FirstOrDefaultAsync(r => r.Book_Id == id && r.User_Id == int.Parse(userId));
-
-
+                    .FirstOrDefaultAsync(r => r.Book_Id == id && r.User_Id == userId);
                 ViewData["UserRating"] = userReview?.Rating;
+
+                var bookStatus = await _context.User_Books
+                    .FirstOrDefaultAsync(b => b.Book_Id == id && b.User_Id == userId);
+
+
+                ViewData["BookStatus"] = bookStatus?.Status.ToString();
 
             }
 
             return View(book);
-
         }
+
 
 
         [HttpPost]
@@ -51,6 +56,50 @@ namespace BookApp2.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [HttpPost]
+        public IActionResult UpdateShelf(int bookId, string shelfType)
+        {
+                var userId = Int32.Parse(   HttpContext.Session.GetString("UserId"));
+          
+            BookShelfStatus status;
+            switch (shelfType.ToLower())
+            {
+                case "want-to-read":
+                    status = BookShelfStatus.WantToRead;
+                    break;
+                case "currently-reading":
+                    status = BookShelfStatus.CurrentlyReading;
+                    break;
+                case "read":
+                    status = BookShelfStatus.Read;
+                    break;
+                default:
+                    return BadRequest("Invalid shelf type.");
+            }
+
+            var existingEntry = _context.User_Books
+                .FirstOrDefault(ub => ub.User_Id == userId && ub.Book_Id == bookId);
+
+            if (existingEntry != null)
+            {
+                existingEntry.Status = status;
+                _context.User_Books.Update(existingEntry);
+            }
+            else
+            {
+                var newEntry = new UserBooks
+                {
+                    User_Id = userId,
+                    Book_Id = bookId,
+                    Status = status
+                };
+                _context.User_Books.Add(newEntry);
+            }
+
+            _context.SaveChanges();
+
+            return RedirectToAction("Index", new { id = bookId });
+        }
 
     }
 }

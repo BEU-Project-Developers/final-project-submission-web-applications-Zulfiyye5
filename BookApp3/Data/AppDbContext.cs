@@ -13,6 +13,8 @@ namespace BookApp3.Data
         public DbSet<Review> Reviews { get; set; }
         public DbSet<User> Users { get; set; }
 
+        public DbSet<UserBooks> User_Books { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Author>()
@@ -26,6 +28,26 @@ namespace BookApp3.Data
                 .WithMany(a => a.Books)
                 .HasForeignKey(b => b.Author_Id)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<UserBooks>()
+           .HasKey(ub => new { ub.User_Id, ub.Book_Id });
+
+            modelBuilder.Entity<UserBooks>()
+                .Property(ub => ub.User_Id).HasColumnName("user_Id");
+
+            modelBuilder.Entity<UserBooks>()
+                .Property(ub => ub.Book_Id).HasColumnName("book_Id");
+
+            modelBuilder.Entity<UserBooks>()
+                .HasOne(ub => ub.User)
+                .WithMany()
+                .HasForeignKey(ub => ub.User_Id);
+
+            modelBuilder.Entity<UserBooks>()
+                .HasOne(ub => ub.Book)
+                .WithMany()
+                .HasForeignKey(ub => ub.Book_Id);
+
 
             modelBuilder.Entity<User>()
                 .HasKey(u => u.User_Id);
@@ -49,8 +71,8 @@ namespace BookApp3.Data
             modelBuilder.Entity<Author>().ToTable("Authors");
             modelBuilder.Entity<User>().ToTable("Users");
             modelBuilder.Entity<Review>().ToTable("Reviews");
+            modelBuilder.Entity<UserBooks>().ToTable("User_Books");
 
-            base.OnModelCreating(modelBuilder);
 
             base.OnModelCreating(modelBuilder);
         }

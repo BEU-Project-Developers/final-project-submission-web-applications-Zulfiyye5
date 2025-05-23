@@ -1,6 +1,6 @@
 ﻿@{
     ViewData["Title"] = "Book details";
-
+    var id = Model.Book_Id;
     var title = Model?.Title ?? "Untitled Book";
     var author = Model?.Author ?? null;
     var coverUrl = Model?.Cover_Url ?? "/images/default-book.jpg";
@@ -8,6 +8,7 @@
     var firstPublish = Model?.First_Publish ?? "Unknown";
     var pageCount = Model?.Page_Count.ToString() ?? "0";
     var reviews = Model?.Reviews ?? new List<Review>();
+    var bookStatus = ViewData["BookStatus"] as string;
 }
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 
@@ -27,10 +28,100 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="~/css/bdetail.css?v=1.1" />
-</head>
 
+</head>
+<style>
+    .popup {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(26, 42, 58, 0.8); 
+    backdrop-filter: blur(5px);
+    }
+
+    .popup-content {
+    background-color: var(--deep-blue);
+    margin: 15% auto;
+    padding: 30px;
+    border: 1px solid var(--lavender);
+    width: 30%;
+    min-width: 300px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    color: var(--moonlight);
+    }
+
+    .popup h2 {
+    color: var(--gold);
+    font-family: 'Playfair Display', serif;
+    margin-bottom: 25px;
+    font-size: 1.5rem;
+    }
+
+    .shelf-buttons {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    }
+
+    .shelf-button {
+    padding: 14px;
+    border: 2px solid var(--lavender);
+    border-radius: 999px;
+    font-size: 16px;
+    background-color: transparent;
+    color: var(--moonlight);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    }
+
+    .shelf-button:hover {
+    background-color: rgba(184, 184, 255, 0.2);
+    transform: translateY(-2px);
+    }
+
+    .close-btn {
+    color: var(--moonlight);
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s;
+    line-height: 1;
+    }
+
+    .close-btn:hover {
+    color: var(--accent);
+    }
+</style>
 
 <body>
+
+    <div id="popupWindow" class="popup">
+        <div class="popup-content">
+            <span class="close-btn" onclick="closePopup()">&times;</span>
+            <h2 >Choose a shelf for this book</h2>
+            @using (Html.BeginForm("UpdateShelf", "BookDetails", FormMethod.Post))
+            {
+                <div class="shelf-buttons">
+                    <input type="hidden" name="bookId" value="@Model.Book_Id" />
+                    <button class="shelf-button" type="submit" name="shelfType" value="want-to-read">Want to Read</button>
+                    <button class="shelf-button" n type="submit" name="shelfType" value="currently-reading">Currently Reading</button>
+                    <button class="shelf-button" name="shelfType" value="read" class="shelf-button">Read</button>
+                </div>
+            }
+        </div>
+    </div>
+
     <main>
         <div class="container">
             <section class="left-column">
@@ -38,12 +129,44 @@
                     <div class="book-image">
                         <img src="@coverUrl" alt="@title">
                     </div>
-                    <div class="button-container">
-                        <button class="main-button">
-                            <i class="far fa-heart"></i> Want to read
-                        </button>
-                        <button class="dropdown-button">▼</button>
-                    </div>
+                    @if (!isSignedIn)
+                    {
+                        <div class="button-container">
+                            <a href="@Url.Action("SignIn", "Account")" class="main-button">
+                                <i class="far fa-heart"></i> Want to read?
+                            </a>
+                            <a href="@Url.Action("SignIn", "Account")" class="dropdown-button">▼</a>
+                        </div>
+                    }
+                    else
+                    {
+                        @if (!string.IsNullOrEmpty(bookStatus))
+                        {  @using (Html.BeginForm("UpdateShelf", "BookDetails", FormMethod.Post))
+                            {
+                            <div class="unified-button">
+                                    <a onclick="openPopup()">
+                                    <i class="fas fa-bookmark"></i> @bookStatus
+                                </a>
+                            </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="button-container">
+                                @using (Html.BeginForm("UpdateShelf", "BookDetails", FormMethod.Post))
+                                {
+                                    <input type="hidden" name="bookId" value="@Model.Book_Id" />
+                                    <input type="hidden" name="shelfType" value="want-to-read" />
+                                    <button class="main-button" type="submit">
+                                        <i class="far fa-heart"></i> Add to read
+                                    </button>
+                                }
+                                <button onclick="openPopup()" class="dropdown-button">▼</button>
+                            </div>
+                        }
+                    }
+
+                  
                     <div class="rating-widget">
                         <div class="stars">
                             @if (isSignedIn)
@@ -98,10 +221,12 @@
                         <h2 class="book-title">@title</h2>
                         <a class="author-link" href="@Url.Action("Index", "AuthorInfo", new { id = author.Author_id })" >
                             <h3 class="author-name">By @author.Name</h3></a>
+                       
                     </div>
 
 
                     <div class="book-meta">
+                        
                         <span>📅 @firstPublish</span>
                         <span>📖 @pageCount pages</span>
                         <span>⭐ 4.5/5</span>
@@ -113,7 +238,7 @@
                     <h3>What do you think?</h3>
                     @if (isSignedIn)
                     {
-                           <a href="@Url.Action("Index", "AddReview")" class="custom-button">Write Review</a>
+                        <a href="@Url.Action("Index", "AddReview", new { id = id})" class="custom-button">Write Review</a>
                     }
                     else{
                         <a href="@Url.Action("SignIn", "Account")" class="custom-button">Write Review</a>
@@ -167,7 +292,7 @@
                                     <div class="user-profile">
                                         <img src="@review.User.Profile_Picture" alt="User profile">
                                     </div>
-                                    <div class="@review.User.User_Name">BookLover</div>
+                                    <div class="@review.User.User_Name">@review.User.User_Name</div>
                                 </div>
                                 <div class="review-content">
                                     <div class="stars-container">
@@ -285,6 +410,23 @@
 
 
         });
+    </script>
+    <script>
+        function openPopup() {
+            document.getElementById("popupWindow").style.display = "block";
+        }
+
+        function closePopup() {
+            document.getElementById("popupWindow").style.display = "none";
+        }
+
+    
+        window.onclick = function(event) {
+            var popup = document.getElementById("popupWindow");
+            if (event.target === popup) {
+                popup.style.display = "none";
+            }
+        }
     </script>
 </body>
 

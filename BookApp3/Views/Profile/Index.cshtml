@@ -1,4 +1,5 @@
-﻿@{
+﻿@using System.Globalization
+@{
     ViewData["Title"] = "User details";
 
     var email = Model?.Email ?? "Unknown";
@@ -6,7 +7,7 @@
     var user_name = Model?.User_Name ?? "Unknown";
     var profile_Picture = Model?.Profile_Picture ?? "https://i.pinimg.com/736x/0f/68/94/0f6894e539589a50809e45833c8bb6c4.jpg";
     var bg_Picture = Model?.Bg_Picture ?? "https://i.pinimg.com/736x/50/1a/43/501a430ff76b05322856c9075e9475cb.jpg";
-
+    var joined_in = (Model?.JoinedIn ?? DateTime.Now).ToString("MMMM yyyy", CultureInfo.InvariantCulture);
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -22,16 +23,21 @@
     <link rel="stylesheet" href="~/css/profile.css?v=1.0" />
 </head>
 <body>
-    <div class="profile-header" style=" background: linear-gradient(rgba(26, 42, 58, 0.7), rgba(26, 42, 58, 0.7)), url(@bg_Picture) no-repeat center center/cover">
-        <div class="profile-avatar" style="background:url(@profile_Picture) no-repeat center center/cover"></div>
+    <div class="profile-header"
+         style="background: linear-gradient(rgba(26, 42, 58, 0.7), rgba(26, 42, 58, 0.7)), url('@bg_Picture') no-repeat center center/cover">
+        <div class="profile-avatar"
+             style="background: url('@profile_Picture') no-repeat center center/cover">
+        </div>
     </div>
+
 
     <div class="profile-container">
 
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
                 <h2>@user_name</h2>
-                <p class="text-muted"><i class="fas fa-calendar-alt me-2"></i>Joined in August 2024 <span class="mx-2">|</span> <i class="fas fa-circle text-success me-2" style="font-size: 10px;"></i>Active this week</p>
+                <p class="text-muted"><i class="fas fa-calendar-alt me-2"></i>Joined in @joined_in <span class="mx-2"></span></p>
+
             </div>
             <button type="button" class="btn btn-outline-primary" onclick="location.href='@Url.Action("Edit", "Profile")'">
                 <i class="fas fa-user-edit me-2"></i>Edit Profile

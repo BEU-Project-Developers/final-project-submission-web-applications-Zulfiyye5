@@ -23,9 +23,13 @@
     <link rel="stylesheet" href="~/css/profile.css?v=1.0" />
 </head>
 <body>
-    <div class="profile-header" style="background: linear-gradient(rgba(26, 42, 58, 0.7), rgba(26, 42, 58, 0.7)), url(@bg_Picture) no-repeat center center/cover">
-        <div class="profile-avatar" style="background:url(@profile_Picture) no-repeat center center/cover"></div>
+    <div class="profile-header"
+         style="background: linear-gradient(rgba(26, 42, 58, 0.7), rgba(26, 42, 58, 0.7)), url('@bg_Picture') no-repeat center center/cover">
+        <div class="profile-avatar"
+             style="background: url('@profile_Picture') no-repeat center center/cover">
+        </div>
     </div>
+
 
     <div class="profile-container">
         <h2 class="mb-4">Edit Profile</h2>
