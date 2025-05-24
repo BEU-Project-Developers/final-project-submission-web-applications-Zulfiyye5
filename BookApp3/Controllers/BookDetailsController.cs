@@ -53,8 +53,30 @@ namespace BookApp2.Controllers
         [HttpPost]
         public IActionResult RateBook(int bookId, int rating)
         {
-            return RedirectToAction("Index", "Home");
+            var userId = Int32.Parse(HttpContext.Session.GetString("UserId"));
+            var existingRating = _context.Reviews
+                .FirstOrDefault(r => r.Book_Id == bookId && r.User_Id == userId);
+
+            if (existingRating != null)
+            {
+                existingRating.Rating = rating;
+                _context.Reviews.Update(existingRating);
+            }
+            else
+            {
+                var newEntry = new Review
+                {
+                    User_Id = userId,
+                    Book_Id = bookId,
+                    Rating = rating
+                };
+                _context.Reviews.Add(newEntry);
+            }
+
+            _context.SaveChanges();
+            return RedirectToAction("Index", new { id = bookId });
         }
+
 
         [HttpPost]
         public IActionResult UpdateShelf(int bookId, string shelfType)

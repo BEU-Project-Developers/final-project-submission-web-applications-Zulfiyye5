@@ -166,44 +166,48 @@
                         }
                     }
 
-                  
+
                     <div class="rating-widget">
                         <div class="stars">
                             @if (isSignedIn)
                             {
                                 var userRating = ViewData["UserRating"] as int?;
-                                
-                                for (int i = 1; i <= 5; i++)
-                                {
-                                    
-                                  
 
-                                    if (userRating.HasValue && i <= userRating.Value)
+                                <form id="ratingForm" method="post" action="@Url.Action("RateBook", "BookDetails")">
+                                    <input type="hidden" name="bookId" value="@Model.Book_Id" />
+                                    <input type="hidden" name="rating" id="ratingValue" />
+
+                                    @for (int i = 1; i <= 5; i++)
                                     {
-                                        <i class="fas fa-star star filled" data-rating="@i"></i>
+                                        if (userRating.HasValue && i <= userRating.Value)
+                                        {
+                                            <i class="fas fa-star star filled" data-rating="@i"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="far fa-star star empty" data-rating="@i"></i>
+                                        }
+                                    }
+                                </form>
+
+                                <div class="rate-text">
+                                    @if (userRating.HasValue)
+                                    {
+                                        @:You rated this @userRating.Value star@(userRating.Value > 1 ? "s" : "")
                                     }
                                     else
                                     {
-                                        <i class="far fa-star star empty" data-rating="@i"></i>
+                                        @:Rate this book
                                     }
-                                }
-                                if(!userRating.HasValue){
-                                    <div class="rate-text">Rate this book</div>
-                                }
-                                else{
-
-                                    <div class="rate-text">You rated this book</div>
-                                }
-
-
+                                </div>
                             }
                             else
                             {
-                              
-                                for (int i = 1; i <= 5; i++)
+                                @for (int i = 1; i <= 5; i++)
                                 {
                                     <i class="far fa-star star empty" data-rating="@i"></i>
                                 }
+                                <div class="rate-text">Sign in to rate</div>
                             }
                         </div>
                     </div>
@@ -427,6 +431,15 @@
                 popup.style.display = "none";
             }
         }
+    </script>
+    <script>
+        document.querySelectorAll('.star').forEach(star => {
+            star.addEventListener('click', function () {
+                const rating = this.getAttribute('data-rating');
+                document.getElementById('ratingValue').value = rating;
+                document.getElementById('ratingForm').submit();
+            });
+        });
     </script>
 </body>
 
