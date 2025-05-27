@@ -353,8 +353,10 @@ input[type="text"] {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     gap: 1rem;
     width: 100%;
+    margin-top:1rem;
 }
 
 .stars {
@@ -396,6 +398,12 @@ input[type="text"] {
     display: flex;
     flex-direction: column;
 }
+.stars-center {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem; 
+    margin-bottom: 0.5rem;
+}
 
 .stars {
     font-size: 1.5rem; 
@@ -409,7 +417,7 @@ input[type="text"] {
 
 .rate-text {
     font-size: 1rem;
-    margin-left:15px;
+  
     color:white;
 }
 
@@ -456,4 +464,25 @@ input[type="text"] {
 
 .unified-button {
     height: 50px;
+
+
+
 }
+
+.clear-rating {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    cursor: pointer;
+    padding: 0;
+    opacity: 0.7;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+    .clear-rating:hover {
+        opacity: 1;
+        text-decoration: underline;
+        color: var(--accent);
+    }

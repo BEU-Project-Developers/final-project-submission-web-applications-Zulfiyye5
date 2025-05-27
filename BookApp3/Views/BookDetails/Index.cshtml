@@ -117,6 +117,9 @@
                     <button class="shelf-button" type="submit" name="shelfType" value="want-to-read">Want to Read</button>
                     <button class="shelf-button" n type="submit" name="shelfType" value="currently-reading">Currently Reading</button>
                     <button class="shelf-button" name="shelfType" value="read" class="shelf-button">Read</button>
+                    @if (!string.IsNullOrEmpty(bookStatus)){
+                        <button class="shelf-button" type="submit" name="shelfType" value="remove">Remove from Shelf</button>
+                    }
                 </div>
             }
         </div>
@@ -143,11 +146,11 @@
                         @if (!string.IsNullOrEmpty(bookStatus))
                         {  @using (Html.BeginForm("UpdateShelf", "BookDetails", FormMethod.Post))
                             {
-                            <div class="unified-button">
+                                <div class="unified-button">
                                     <a onclick="openPopup()">
-                                    <i class="fas fa-bookmark"></i> @bookStatus
-                                </a>
-                            </div>
+                                        <i class="fas fa-bookmark"></i> @bookStatus
+                                    </a>
+                                </div>
                             }
                         }
                         else
@@ -176,24 +179,31 @@
                                 <form id="ratingForm" method="post" action="@Url.Action("RateBook", "BookDetails")">
                                     <input type="hidden" name="bookId" value="@Model.Book_Id" />
                                     <input type="hidden" name="rating" id="ratingValue" />
+                                    <div class="stars-center">
+                                        @for (int i = 1; i <= 5; i++)
+                                        {
+                                            if (userRating.HasValue && i <= userRating.Value)
+                                            {
+                                                <i class="fas fa-star star filled" data-rating="@i"></i>
 
-                                    @for (int i = 1; i <= 5; i++)
-                                    {
-                                        if (userRating.HasValue && i <= userRating.Value)
-                                        {
-                                            <i class="fas fa-star star filled" data-rating="@i"></i>
+                                            }
+                                            else
+                                            {
+                                                <i class="far fa-star star empty" data-rating="@i"></i>
+                                            }
                                         }
-                                        else
-                                        {
-                                            <i class="far fa-star star empty" data-rating="@i"></i>
-                                        }
-                                    }
+                                    </div>
                                 </form>
-
                                 <div class="rate-text">
-                                    @if (userRating.HasValue)
+                                    @if (userRating.HasValue && userRating!=0)
                                     {
-                                        @:You rated this @userRating.Value star@(userRating.Value > 1 ? "s" : "")
+                                        <div>You rated this @userRating.Value star@(userRating.Value > 1 ? "s" : "")</div>
+                                        @using (Html.BeginForm("ClearRating", "BookDetails", FormMethod.Post))
+                                        {
+                                            <input type="hidden" name="bookId" value="@Model.Book_Id" />
+                                            <button type="submit" class="clear-rating">Clear</button>
+                                        }
+                          
                                     }
                                     else
                                     {
@@ -386,30 +396,9 @@
         });
     });
 
-            const animateOnScroll = function() {
-                const elements = document.querySelectorAll('.review, .rating-widget');
+      
 
-                elements.forEach(element => {
-                    const elementPosition = element.getBoundingClientRect().top;
-                    const windowHeight = window.innerHeight;
-
-                    if (elementPosition < windowHeight - 100) {
-                        element.style.opacity = '1';
-                        element.style.transform = 'translateY(0)';
-                    }
-                });
-            };
-
-            const animatedElements = document.querySelectorAll('.review, .rating-widget');
-            animatedElements.forEach(element => {
-                element.style.opacity = '0';
-                element.style.transform = 'translateY(20px)';
-                element.style.transition = 'all 0.6s ease';
-            });
-
-            animateOnScroll();
-            window.addEventListener('scroll', animateOnScroll);
-
+       
 
 
 

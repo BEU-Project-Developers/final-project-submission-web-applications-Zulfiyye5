@@ -7,8 +7,8 @@ namespace BookApp3.Models
         public int Review_Id { get; set; }
         public int User_Id { get; set; }
         public int Book_Id { get; set; }
-        public int Rating { get; set; }
-        public string Review_Text { get; set; }
+        public int Rating { get; set; }=0;
+        public string? Review_Text { get; set; }
         public DateTime Created_At { get; set; }
 
         public User User { get; set; }

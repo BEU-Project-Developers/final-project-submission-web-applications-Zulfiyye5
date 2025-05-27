@@ -2,12 +2,16 @@
 @{
     ViewData["Title"] = "User details";
 
-    var email = Model?.Email ?? "Unknown";
+    var email = Model?.User.Email ?? "Unknown";
 
-    var user_name = Model?.User_Name ?? "Unknown";
-    var profile_Picture = Model?.Profile_Picture ?? "https://i.pinimg.com/736x/0f/68/94/0f6894e539589a50809e45833c8bb6c4.jpg";
-    var bg_Picture = Model?.Bg_Picture ?? "https://i.pinimg.com/736x/50/1a/43/501a430ff76b05322856c9075e9475cb.jpg";
-    var joined_in = (Model?.JoinedIn ?? DateTime.Now).ToString("MMMM yyyy", CultureInfo.InvariantCulture);
+    var user_name = Model?.User.User_Name ?? "Unknown";
+    var profile_Picture = Model?.User.Profile_Picture ?? "https://i.pinimg.com/736x/0f/68/94/0f6894e539589a50809e45833c8bb6c4.jpg";
+    var bg_Picture = Model?.User.Bg_Picture ?? "https://i.pinimg.com/736x/50/1a/43/501a430ff76b05322856c9075e9475cb.jpg";
+    var joined_in = (Model?.User.JoinedIn ?? DateTime.Now).ToString("MMMM yyyy", CultureInfo.InvariantCulture);
+    var wantToReadBooks = Model?.WantToReadBooks ?? new List<Book>();
+    var currentlyReadingBooks = Model?.CurrentlyReadingBooks ?? new List<Book>();
+    var readBooks = Model?.ReadBooks ?? new List<Book>();
+
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -29,7 +33,7 @@
              style="background: url('@profile_Picture') no-repeat center center/cover">
         </div>
     </div>
-
+ 
 
     <div class="profile-container">
 
@@ -44,92 +48,50 @@
             </button>
 
         </div>
-    
+
         <div class="profile-section">
-            <h3 class="section-title">Want to Read <span class="badge-count">3</span></h3>
+            <h3 class="section-title">Want to Read <span class="badge-count">@wantToReadBooks.Count</span></h3>
             <div class="row">
-                <div class="col-6 col-md-4 col-lg-3 col-xl-2">
-                    <div class="book-card">
-                        <img src="https://r2.1k-cdn.com/sig/size:384/plain/https%3A%2F%2F1k-cdn.com%2Fresimler%2Fkitaplar%2F92217_2af75_1568650642.jpg" alt="The Poppy War">
-                        <p class="book-title">The Poppy War</p>
+                @foreach (var book in wantToReadBooks)
+                {
+                    <div class="col-6 col-md-4 col-lg-3 col-xl-2">
+                        <a href="@Url.Action("Index", "BookDetails", new { id = book.Book_Id })" class="book-card text-center d-block">
+                            <img src="@book.Cover_Url" alt="@book.Title" class="img-fluid mb-3">
+                            <h6 class="book-title">@book.Title</h6>
+                        </a>
                     </div>
-                </div>
-                <div class="col-6 col-md-4 col-lg-3 col-xl-2">
-                    <div class="book-card">
-                        <img src="https://r2.1k-cdn.com/sig/size:384/plain/https%3A%2F%2F1k-cdn.com%2Fresimler%2Fkitaplar%2F1199080_1700393429_taKyL.jpg" alt="Welcome to the Hyunam-Dong Bookshop">
-                        <p class="book-title">Welcome to the Hyunam-Dong Bookshop</p>
-                    </div>
-                </div>
-                <div class="col-6 col-md-4 col-lg-3 col-xl-2">
-                    <div class="book-card">
-                        <img src="https://r2.1k-cdn.com/sig/size:384/plain/https%3A%2F%2F1k-cdn.com%2Fresimler%2Fkitaplar%2F868078_1711963806_A5bJ4.jpg" alt="Shogun">
-                        <p class="book-title">Shogun</p>
-                    </div>
-                </div>
+                }
             </div>
         </div>
 
         <div class="profile-section">
-            <h3 class="section-title">Have Read <span class="badge-count">2</span></h3>
+            <h3 class="section-title">Currently Reading <span class="badge-count">@currentlyReadingBooks.Count</span></h3>
             <div class="row">
-                <div class="col-6 col-md-4 col-lg-3 col-xl-2">
-                    <div class="book-card">
-                        <img src="https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1546419325i/12913540.jpg" alt="Jane Eyre">
-                        <p class="book-title">Jane Eyre</p>
+                @foreach (var book in currentlyReadingBooks)
+                {
+                    <div class="col-6 col-md-4 col-lg-3 col-xl-2">
+                        <a href="@Url.Action("Index", "BookDetails", new { id = book.Book_Id })" class="book-card text-center d-block">
+                            <img src="@book.Cover_Url" alt="@book.Title" class="img-fluid mb-3">
+                            <h6 class="book-title">@book.Title</h6>
+                        </a>
                     </div>
-                </div>
-                <div class="col-6 col-md-4 col-lg-3 col-xl-2">
-                    <div class="book-card">
-                        <img src="https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1609035271i/41804.jpg" alt="I, Robot">
-                        <p class="book-title">I, Robot</p>
-                    </div>
-                </div>
+                }
             </div>
         </div>
 
         <div class="profile-section">
-            <h3 class="section-title">Recent Reviews</h3>
+            <h3 class="section-title">Have Read <span class="badge-count">@readBooks.Count</span></h3>
             <div class="row">
-                <div class="col-md-6">
-                    <div class="review-card">
-                        <h4>Rated <span class="stars">★★★★☆</span></h4>
-                        <div class="book-info">
-                            <img src="https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1546419325i/12913540.jpg" alt="Jane Eyre">
-                            <div class="book-meta">
-                                <p>Jane Eyre</p>
-                                <p>by Charlotte Brontë</p>
-                            </div>
-                        </div>
-                        <div class="review-text">
-                            <p>"Jane Eyre is the quintessential Victorian novel, featuring one of literature's most memorable heroines. Brontë's masterpiece combines gothic elements with feminist undertones..."</p>
-                        </div>
-                        <div class="text-end text-muted mt-2">
-                            <small><i class="far fa-clock me-1"></i>2 weeks ago</small>
-                        </div>
+                @foreach (var book in readBooks)
+                {
+                    <div class="col-6 col-md-4 col-lg-3 col-xl-2">
+                        <a href="@Url.Action("Index", "BookDetails", new { id = book.Book_Id })" class="book-card text-center d-block">
+                            <img src="@book.Cover_Url" alt="@book.Title" class="img-fluid mb-3">
+                            <h6 class="book-title">@book.Title</h6>
+                        </a>
                     </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="review-card">
-                        <h4>Rated <span class="stars">★★★★★</span></h4>
-                        <div class="book-info">
-                            <img src="https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1320399351i/1885.jpg" alt="Pride and Prejudice">
-                            <div class="book-meta">
-                                <p>Pride and Prejudice</p>
-                                <p>by Jane Austen</p>
-                            </div>
-                        </div>
-                        <div class="review-text">
-                            <p>"Pride and Prejudice is one of the most famous romantic novels of all time. Austen's wit and social commentary shine through Elizabeth Bennet's journey..."</p>
-                        </div>
-                        <div class="text-end text-muted mt-2">
-                            <small><i class="far fa-clock me-1"></i>1 month ago</small>
-                        </div>
-                    </div>
-                </div>
+                }
             </div>
-            @* <div class="text-center mt-3"> *@
-            @*     <button class="btn btn-outline-secondary">View All Reviews <i class="fas fa-arrow-right ms-2"></i></button> *@
-            @* </div> *@
         </div>
     </div>
 

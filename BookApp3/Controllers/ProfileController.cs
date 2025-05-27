@@ -1,4 +1,5 @@
 ﻿using BookApp3.Data;
+using BookApp3.Models;
 using BookApp3.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -18,7 +19,6 @@ namespace BookApp2.Controllers
 
         public async Task<IActionResult> Index()
         {
-   
             int id;
             if (HttpContext.Session.GetString("UserId") != null)
             {
@@ -30,7 +30,7 @@ namespace BookApp2.Controllers
             }
 
             var user = await _context.Users
-                .Include(u => u.Reviews) 
+                .Include(u => u.Reviews)
                 .FirstOrDefaultAsync(u => u.User_Id == id);
 
             if (user == null)
@@ -38,8 +38,32 @@ namespace BookApp2.Controllers
                 return NotFound();
             }
 
-            return View(user);
+            var wantToReadBooks = await _context.User_Books
+                .Where(ub => ub.User_Id == id && ub.Status == BookShelfStatus.WantToRead)
+                .Select(ub => ub.Book)
+                .ToListAsync();
+
+            var currentlyReadingBooks = await _context.User_Books
+                .Where(ub => ub.User_Id == id && ub.Status == BookShelfStatus.CurrentlyReading)
+                .Select(ub => ub.Book)
+                .ToListAsync();
+
+            var readBooks = await _context.User_Books
+                .Where(ub => ub.User_Id == id && ub.Status == BookShelfStatus.Read)
+                .Select(ub => ub.Book)
+                .ToListAsync();
+
+            var profileViewModel = new ProfileViewModel
+            {
+                User = user,
+                WantToReadBooks = wantToReadBooks,
+                CurrentlyReadingBooks = currentlyReadingBooks,
+                ReadBooks = readBooks
+            };
+
+            return View(profileViewModel);
         }
+
 
 
 

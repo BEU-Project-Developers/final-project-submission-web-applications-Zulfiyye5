@@ -1,9 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using BookApp3.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace BookApp3.ViewModels
 {
     public class ProfileEditViewModel
     {
+        public List<Book> ReadBooks { get; set; }
         public int User_Id { get; set; }
 
         public string User_Name { get; set; }
@@ -16,5 +18,6 @@ namespace BookApp3.ViewModels
         public IFormFile BgPicture { get; set; }
         public string CurrentProfilePicture { get; set; }
         public string CurrentBgPicture { get; set; }
+
     }
 }

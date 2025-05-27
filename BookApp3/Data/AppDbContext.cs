@@ -30,7 +30,7 @@ namespace BookApp3.Data
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<UserBooks>()
-           .HasKey(ub => new { ub.User_Id, ub.Book_Id });
+             .HasKey(ub => new { ub.User_Id, ub.Book_Id });
 
             modelBuilder.Entity<UserBooks>()
                 .Property(ub => ub.User_Id).HasColumnName("user_Id");
@@ -38,15 +38,13 @@ namespace BookApp3.Data
             modelBuilder.Entity<UserBooks>()
                 .Property(ub => ub.Book_Id).HasColumnName("book_Id");
 
+          
             modelBuilder.Entity<UserBooks>()
                 .HasOne(ub => ub.User)
-                .WithMany()
-                .HasForeignKey(ub => ub.User_Id);
+                .WithMany(u => u.UserBooks) 
+                .HasForeignKey(ub => ub.User_Id)
+                .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<UserBooks>()
-                .HasOne(ub => ub.Book)
-                .WithMany()
-                .HasForeignKey(ub => ub.Book_Id);
 
 
             modelBuilder.Entity<User>()
