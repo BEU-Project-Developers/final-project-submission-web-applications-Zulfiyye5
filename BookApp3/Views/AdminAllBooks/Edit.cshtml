@@ -1,10 +1,12 @@
-﻿@model Book
+﻿@model BookApp3.ViewModels.BookViewModel
 @{
     ViewData["Title"] = "Edit Book";
     var id = Model.Book_Id;
     var title = Model?.Title ?? "Untitled Book";
     var author = Model?.Author ?? null;
-    var coverUrl = Model?.Cover_Url ?? "/images/default-book.jpg";
+    var coverUrl = Model?.Current_Cover_Url ?? "/images/default-book.jpg";
+    var first_publish = Model?.First_Publish ?? "Unknown";
+
 }
 
 <!DOCTYPE html>
@@ -69,7 +71,7 @@
         max-width: 1200px;
         margin: 0 auto 3rem;
         padding: 0 1rem;
-        margin-top:2rem;
+        margin-top: 2rem;
     }
 
     .admin-alert {
@@ -256,8 +258,43 @@
         filter: invert(1);
     }
 
+    .tab-buttons {
+        display: flex;
+        margin-bottom: 1rem;
+        border-bottom: 1px solid var(--border);
+    }
 
-    
+    .tab-button {
+        padding: 0.5rem 1rem;
+        background: transparent;
+        border: none;
+        color: var(--moonlight);
+        cursor: pointer;
+        font-weight: 600;
+        position: relative;
+    }
+
+        .tab-button.active {
+            color: var(--gold);
+        }
+
+            .tab-button.active::after {
+                content: '';
+                position: absolute;
+                bottom: -1px;
+                left: 0;
+                width: 100%;
+                height: 2px;
+                background: var(--gold);
+            }
+
+    .tab-content {
+        display: none;
+    }
+
+        .tab-content.active {
+            display: block;
+        }
 </style>
 <body>
 
@@ -268,19 +305,43 @@
             You are editing this book as an administrator. Changes will affect all users.
         </div>
 
-        <form asp-action="Edit" asp-controller="AdminBooks" method="post" enctype="multipart/form-data" class="edit-form">
+        <form asp-action="Edit" asp-controller="AdminAllBooks" method="post" enctype="multipart/form-data" class="edit-form">
             <input type="hidden" asp-for="Book_Id" />
+            <input type="file" id="coverFile" name="coverFile" accept="image/*" class="d-none" onchange="previewCover(this)">
 
             <div class="row">
                 <div class="col-md-4">
                     <div class="cover-upload-section">
                         <div class="current-cover">
                             <img src="@coverUrl" alt="Current cover" id="coverPreview">
+
+                            <div class="tab-buttons">
+                                <button type="button" class="tab-button active" onclick="switchTab('uploadTab')">Upload</button>
+                                <button type="button" class="tab-button" onclick="switchTab('urlTab')">URL</button>
+                            </div>
+
+                            <div id="uploadTab" class="tab-content active">
+                                <div class="cover-actions">
+                                    <label for="coverFile" class="btn-upload">
+                                        <i class="fas fa-camera me-2"></i>Choose Image
+                                    </label>
+                                    <input type="file" id="coverFile" name="coverFile" accept="image/*" class="d-none" onchange="previewCover(this)">
+                                </div>
+                            </div>
+
+                            <div id="urlTab" class="tab-content">
+                                <div class="form-group">
+                                    <label for="coverUrlInput">Image URL</label>
+                                    <input type="url" id="coverUrlInput" class="form-control" placeholder="Enter image URL">
+                                </div>
+                                <div class="cover-actions">
+                                    <button type="button" class="btn-upload" onclick="loadFromUrl()">
+                                        <i class="fas fa-cloud-download-alt me-2"></i>Load from URL
+                                    </button>
+                                </div>
+                            </div>
+
                             <div class="cover-actions">
-                                <label for="coverFile" class="btn-upload">
-                                    <i class="fas fa-camera me-2"></i>Change Cover
-                                </label>
-                                <input type="file" id="coverFile" name="coverFile" accept="image/*" class="d-none" onchange="previewCover(this)">
                                 <button type="button" class="btn-reset" onclick="resetCover()">
                                     <i class="fas fa-undo me-2"></i>Reset
                                 </button>
@@ -306,15 +367,15 @@
                                     <select asp-for="Author_Id" asp-items="ViewBag.Authors" class="form-control">
                                         <option value="">-- Select Author --</option>
                                     </select>
+
                                     <span asp-validation-for="Author_Id" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="form-group">
-                                    <label asp-for="First_Publish">First Published</label>
-                                    <input asp-for="First_Publish" type="date" class="form-control">
-                                </div>
+                                <label asp-for="First_Publish">First Published</label>
+                                <input asp-for="First_Publish" class="form-control" placeholder="Enter first publish date">
                             </div>
+
                         </div>
 
                         <div class="form-group">
@@ -333,18 +394,14 @@
                                     <input asp-for="Page_Count" type="number" class="form-control" min="1">
                                 </div>
                             </div>
-                    
                         </div>
-
-                        
                     </div>
-
 
                     <div class="form-actions">
                         <button type="submit" class="btn-save">
                             <i class="fas fa-save me-2"></i>Save Changes
                         </button>
-                        <a href="@Url.Action("Details", "BookDetails", new { id = Model.Book_Id })" class="btn-cancel">
+                        <a href="@Url.Action("Index", "AdminAllBooks", new { id = Model.Book_Id })" class="btn-cancel">
                             <i class="fas fa-times me-2"></i>Cancel
                         </a>
                         <button type="button" class="btn-delete" data-bs-toggle="modal" data-bs-target="#deleteModal">
@@ -353,6 +410,9 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Hidden field to store the final cover URL -->
+            <input type="hidden" id="Cover_Url" name="Cover_Url" value="@coverUrl" />
         </form>
     </div>
 
@@ -370,7 +430,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <form asp-action="Delete" asp-controller="AdminBooks" method="post" style="display: inline;">
+                    <form asp-action="Delete" asp-controller="AdminAllBooks" method="post" style="display: inline;">
                         <input type="hidden" name="id" value="@Model.Book_Id" />
                         <button type="submit" class="btn btn-danger">Delete Permanently</button>
                     </form>
@@ -381,19 +441,64 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        function switchTab(tabId) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Deactivate all tab buttons
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active');
+            });
+
+            // Show the selected tab content
+            document.getElementById(tabId).classList.add('active');
+
+            // Activate the clicked tab button
+            event.currentTarget.classList.add('active');
+        }
+
         function previewCover(input) {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     document.getElementById('coverPreview').src = e.target.result;
+                    // Update the hidden field with the data URL
+                    document.getElementById('Cover_Url').value = e.target.result;
                 }
                 reader.readAsDataURL(input.files[0]);
             }
         }
 
+        function loadFromUrl() {
+            const urlInput = document.getElementById('coverUrlInput');
+            const coverPreview = document.getElementById('coverPreview');
+
+            if (urlInput.value) {
+                // First verify the image exists and is accessible
+                const img = new Image();
+                img.onload = function() {
+                    // If the image loads successfully, update the preview
+                    coverPreview.src = urlInput.value;
+                    // Update the hidden field with the URL
+                    document.getElementById('Cover_Url').value = urlInput.value;
+                };
+                img.onerror = function() {
+                    alert('Error: The image could not be loaded from the provided URL.');
+                };
+                img.src = urlInput.value;
+            } else {
+                alert('Please enter a valid image URL');
+            }
+        }
+
         function resetCover() {
-            document.getElementById('coverPreview').src = '@coverUrl';
+            const defaultCover = document.getElementById('currentCoverUrl').value;
+            document.getElementById('coverPreview').src = defaultCover;
             document.getElementById('coverFile').value = '';
+            document.getElementById('coverUrlInput').value = '';
+            document.getElementById('Cover_Url').value = defaultCover;
         }
     </script>
 </body>
