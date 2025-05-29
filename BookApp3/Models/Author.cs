@@ -5,8 +5,8 @@ namespace BookApp3.Models
     {
         [Key]
         public int Author_id { get; set; }
-        public string Born_Loc { get; set; }
-        public string Born_Date { get; set; }
+        public string? Born_Loc { get; set; }= "Unknown Location";
+        public string? Born_Date { get; set; }= "Unknown Date";
         public string Name { get; set; }
         public string Bio { get; set; }
         public string Profile_Picture { get; set; }

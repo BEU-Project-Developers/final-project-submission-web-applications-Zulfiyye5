@@ -17,11 +17,13 @@ namespace BookApp3.Controllers
             _context = context;
             _webHostEnvironment = webHostEnvironment;
         }
+
         public IActionResult Index()
         {
             var authors = _context.Authors.Include(a => a.Books).ToList();
             return View("Index", authors);
         }
+
         public IActionResult Add()
         {
             return View(new AuthorViewModel());
@@ -31,11 +33,8 @@ namespace BookApp3.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Add(AuthorViewModel model)
         {
-           
-
             string profilePictureUrl = null;
 
-            
             if (model.ProfileImageFile != null && model.ProfileImageFile.Length > 0)
             {
                 profilePictureUrl = await SaveFile(model.ProfileImageFile, "author-profiles");
@@ -61,6 +60,136 @@ namespace BookApp3.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var author = await _context.Authors.FindAsync(id);
+            if (author == null)
+            {
+                return NotFound();
+            }
+
+            var model = new AuthorViewModel
+            {
+                Author_id = author.Author_id,
+                Name = author.Name,
+                Born_Loc = author.Born_Loc,
+                Born_Date = author.Born_Date,
+                Bio = author.Bio,
+                Profile_Picture = author.Profile_Picture
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, AuthorViewModel model)
+        {
+            if (id != model.Author_id)
+            {
+                return NotFound();
+            }
+
+
+            try
+            {
+                var author = await _context.Authors.FindAsync(id);
+                if (author == null)
+                {
+                    return NotFound();
+                }
+
+                // Handle profile picture update
+                if (model.ProfileImageFile != null && model.ProfileImageFile.Length > 0)
+                {
+                    // Save new file and update URL
+                    var newProfilePictureUrl = await SaveFile(model.ProfileImageFile, "author-profiles");
+
+                    // Delete old file if it exists and isn't the default
+                    if (!string.IsNullOrEmpty(author.Profile_Picture) &&
+                        !author.Profile_Picture.StartsWith("/images/default-"))
+                    {
+                        DeleteFile(author.Profile_Picture);
+                    }
+
+                    author.Profile_Picture = newProfilePictureUrl;
+                }
+                else if (!string.IsNullOrEmpty(model.Profile_Picture) &&
+                         model.Profile_Picture != author.Profile_Picture)
+                {
+                    // URL was manually changed
+                    author.Profile_Picture = model.Profile_Picture;
+                }
+
+                // Update other properties
+                author.Name = model.Name;
+                author.Born_Loc = model.Born_Loc;
+                author.Born_Date = model.Born_Date;
+                author.Bio = model.Bio;
+
+                _context.Update(author);
+                await _context.SaveChangesAsync();
+
+                TempData["SuccessMessage"] = "Author updated successfully!";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!AuthorExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var author = await _context.Authors
+                .Include(a => a.Books)
+                .FirstOrDefaultAsync(a => a.Author_id == id);
+
+            if (author == null)
+            {
+                return NotFound();
+            }
+
+            // Check if author has any books before deleting
+            if (author.Books != null && author.Books.Any())
+            {
+                TempData["ErrorMessage"] = "Cannot delete author because they have associated books. Please delete the books first.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            // Delete profile picture if it exists and isn't the default
+            if (!string.IsNullOrEmpty(author.Profile_Picture) &&
+                !author.Profile_Picture.StartsWith("/images/default-"))
+            {
+                DeleteFile(author.Profile_Picture);
+            }
+
+            _context.Authors.Remove(author);
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = "Author deleted successfully!";
+            return RedirectToAction(nameof(Index));
+        }
+
+        private bool AuthorExists(int id)
+        {
+            return _context.Authors.Any(e => e.Author_id == id);
+        }
+
         private async Task<string> SaveFile(IFormFile file, string folderName)
         {
             if (file == null || file.Length == 0)
@@ -83,6 +212,20 @@ namespace BookApp3.Controllers
             }
 
             return $"/uploads/{folderName}/{uniqueFileName}";
+        }
+
+        private void DeleteFile(string filePath)
+        {
+            if (string.IsNullOrEmpty(filePath))
+            {
+                return;
+            }
+
+            var fullPath = Path.Combine(_webHostEnvironment.WebRootPath, filePath.TrimStart('/'));
+            if (System.IO.File.Exists(fullPath))
+            {
+                System.IO.File.Delete(fullPath);
+            }
         }
     }
 }

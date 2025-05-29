@@ -1,0 +1,482 @@
+﻿@model BookApp3.ViewModels.AuthorViewModel
+@{
+    ViewData["Title"] = "Edit Author";
+    var id = Model.Author_id;
+    var name = Model?.Name ?? "Unknown Author";
+    var profileUrl = Model?.Profile_Picture ?? "/images/default-author.jpg";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Edit Author</title>
+    <link rel="preconnected" href="https://fonts.googleapis.com">
+    <link rel="preconnected" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="~/css/home.css?v=1.0" />
+</head>
+<style>
+    :root {
+        --deep-blue: #1a2a3a;
+        --moonlight: #f0f4f8;
+        --lavender: #b4b4ff;
+        --gold: #ffd700;
+        --accent: #ff9aa2;
+        --brown: #8B4513;
+        --text-primary: #333;
+        --text-secondary: #666;
+        --border: rgba(180, 180, 255, 0.2);
+        --surface: rgba(255, 255, 255, 0.05);
+        --elevated: rgba(255, 255, 255, 0.1);
+        --accent-light: #ffb7bd;
+    }
+
+    .admin-header {
+        background: var(--deep-blue);
+        padding: 1.5rem 0;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 2rem;
+    }
+
+        .admin-header h1 {
+            color: var(--gold);
+            font-family: 'Playfair Display', serif;
+            margin: 0;
+            font-size: 2rem;
+        }
+
+    .admin-breadcrumb {
+        color: var(--moonlight);
+        font-size: 0.9rem;
+        margin-top: 0.5rem;
+    }
+
+        .admin-breadcrumb a {
+            color: var(--lavender);
+            text-decoration: none;
+        }
+
+            .admin-breadcrumb a:hover {
+                text-decoration: underline;
+            }
+
+    .admin-edit-container {
+        max-width: 1200px;
+        margin: 0 auto 3rem;
+        padding: 0 1rem;
+        margin-top: 2rem;
+    }
+
+    .admin-alert {
+        background: rgba(255, 154, 162, 0.2);
+        border-left: 4px solid var(--accent);
+        padding: 1rem;
+        margin-bottom: 2rem;
+        color: var(--moonlight);
+        font-weight: 600;
+        border-radius: 4px;
+    }
+
+    .edit-form {
+        background: var(--surface);
+        padding: 2rem;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+    }
+
+    .form-section {
+        margin-bottom: 2rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .section-title {
+        color: var(--gold);
+        font-family: 'Playfair Display', serif;
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--moonlight);
+            font-weight: 600;
+        }
+
+    .form-control {
+        width: 100%;
+        padding: 0.75rem;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        color: var(--moonlight);
+        font-family: 'Montserrat', sans-serif;
+    }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--lavender);
+            box-shadow: 0 0 0 2px rgba(180, 180, 255, 0.3);
+        }
+
+    textarea.form-control {
+        min-height: 120px;
+        resize: vertical;
+    }
+
+    .profile-upload-section {
+        position: relative;
+    }
+
+    .current-profile {
+        margin-bottom: 1rem;
+    }
+
+        .current-profile img {
+            width: 100%;
+            max-width: 300px;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border);
+        }
+
+    .profile-actions {
+        display: flex;
+        gap: 0.75rem;
+        margin-top: 1rem;
+    }
+
+    .btn-upload, .btn-reset {
+        padding: 0.75rem 1rem;
+        border-radius: 4px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        flex: 1;
+        text-align: center;
+    }
+
+    .btn-upload {
+        background: var(--lavender);
+        color: var(--deep-blue);
+        border: none;
+    }
+
+        .btn-upload:hover {
+            background: #9e9eff;
+        }
+
+    .btn-reset {
+        background: transparent;
+        color: var(--moonlight);
+        border: 1px solid var(--border);
+    }
+
+        .btn-reset:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+        flex-wrap: wrap;
+    }
+
+    .btn-save, .btn-cancel, .btn-delete {
+        padding: 0.75rem 1.5rem;
+        border-radius: 4px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        border: none;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .btn-save {
+        background: var(--lavender);
+        color: var(--deep-blue);
+    }
+
+        .btn-save:hover {
+            background: #9e9eff;
+            transform: translateY(-2px);
+        }
+
+    .btn-cancel {
+        background: transparent;
+        color: var(--moonlight);
+        border: 1px solid var(--border);
+    }
+
+        .btn-cancel:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+    .btn-delete {
+        background: transparent;
+        color: var(--accent);
+        border: 1px solid var(--accent);
+        margin-left: auto;
+    }
+
+        .btn-delete:hover {
+            background: rgba(255, 154, 162, 0.1);
+        }
+
+    .modal-content {
+        background: var(--deep-blue);
+        color: var(--moonlight);
+        border: 1px solid var(--border);
+    }
+
+    .modal-header {
+        border-bottom: 1px solid var(--border);
+    }
+
+    .modal-footer {
+        border-top: 1px solid var(--border);
+    }
+
+    .btn-close {
+        filter: invert(1);
+    }
+
+    .tab-buttons {
+        display: flex;
+        margin-bottom: 1rem;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .tab-button {
+        padding: 0.5rem 1rem;
+        background: transparent;
+        border: none;
+        color: var(--moonlight);
+        cursor: pointer;
+        font-weight: 600;
+        position: relative;
+    }
+
+        .tab-button.active {
+            color: var(--gold);
+        }
+
+            .tab-button.active::after {
+                content: '';
+                position: absolute;
+                bottom: -1px;
+                left: 0;
+                width: 100%;
+                height: 2px;
+                background: var(--gold);
+            }
+
+    .tab-content {
+        display: none;
+    }
+
+        .tab-content.active {
+            display: block;
+        }
+</style>
+<body>
+    <div class="container admin-edit-container">
+        <div class="admin-alert">
+            <i class="fas fa-exclamation-circle me-2"></i>
+            You are editing this author as an administrator. Changes will affect all users.
+        </div>
+
+        <form asp-action="Edit" asp-controller="AdminAllAuthors" method="post" enctype="multipart/form-data" class="edit-form">
+            <input type="hidden" asp-for="Author_id" />
+            <input type="file" id="profileFile" name="ProfileImageFile" accept="image/*" class="d-none" onchange="previewProfile(this)">
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="profile-upload-section">
+                        <div class="current-profile">
+                            <img src="@profileUrl" alt="Current profile picture" id="profilePreview">
+
+                            <div class="tab-buttons">
+                                <button type="button" class="tab-button active" onclick="switchTab('uploadTab')">Upload</button>
+                                <button type="button" class="tab-button" onclick="switchTab('urlTab')">URL</button>
+                            </div>
+
+                            <div id="uploadTab" class="tab-content active">
+                                <div class="profile-actions">
+                                    <label for="profileFile" class="btn-upload">
+                                        <i class="fas fa-camera me-2"></i>Choose Image
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div id="urlTab" class="tab-content">
+                                <div class="form-group">
+                                    <label for="profileUrlInput">Image URL</label>
+                                    <input type="url" id="profileUrlInput" class="form-control" placeholder="Enter image URL">
+                                </div>
+                                <div class="profile-actions">
+                                    <button type="button" class="btn-upload" onclick="loadFromUrl()">
+                                        <i class="fas fa-cloud-download-alt me-2"></i>Load from URL
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="profile-actions">
+                                <button type="button" class="btn-reset" onclick="resetProfile()">
+                                    <i class="fas fa-undo me-2"></i>Reset
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-8">
+                    <div class="form-section">
+                        <h2 class="section-title">Basic Information</h2>
+
+                        <div class="form-group">
+                            <label asp-for="Name">Name*</label>
+                            <input asp-for="Name" class="form-control" placeholder="Enter author's name">
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="Born_Loc">Birth Location</label>
+                                    <input asp-for="Born_Loc" class="form-control" placeholder="Enter birth location">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Born_Date">Birth Date</label>
+                                <input asp-for="Born_Date" type="date" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Bio">Biography</label>
+                            <textarea asp-for="Bio" class="form-control" rows="5" placeholder="Enter author biography"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn-save">
+                            <i class="fas fa-save me-2"></i>Save Changes
+                        </button>
+                        <a href="@Url.Action("Index", "AdminAllAuthors")" class="btn-cancel">
+                            <i class="fas fa-times me-2"></i>Cancel
+                        </a>
+                        <button type="button" class="btn-delete" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                            <i class="fas fa-trash-alt me-2"></i>Delete Author
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hidden field to store the final profile URL -->
+            <input type="hidden" id="Profile_Picture" name="Profile_Picture" value="@profileUrl" />
+        </form>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirm Deletion</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete author "<strong>@name</strong>"?</p>
+                    <p class="text-danger">This action cannot be undone and will remove all associated books and data.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <form asp-action="Delete" asp-controller="AdminAllAuthors" method="post" style="display: inline;">
+                        <input type="hidden" name="id" value="@Model.Author_id" />
+                        <button type="submit" class="btn btn-danger">Delete Permanently</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function switchTab(tabId) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Deactivate all tab buttons
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active');
+            });
+
+            // Show the selected tab content
+            document.getElementById(tabId).classList.add('active');
+
+            // Activate the clicked tab button
+            event.currentTarget.classList.add('active');
+        }
+
+        function previewProfile(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('profilePreview').src = e.target.result;
+                    // Update the hidden field with the data URL
+                    document.getElementById('Profile_Picture').value = e.target.result;
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function loadFromUrl() {
+            const urlInput = document.getElementById('profileUrlInput');
+            const profilePreview = document.getElementById('profilePreview');
+
+            if (urlInput.value) {
+                // First verify the image exists and is accessible
+                const img = new Image();
+                img.onload = function() {
+                    // If the image loads successfully, update the preview
+                    profilePreview.src = urlInput.value;
+                    // Update the hidden field with the URL
+                    document.getElementById('Profile_Picture').value = urlInput.value;
+                };
+                img.onerror = function() {
+                    alert('Error: The image could not be loaded from the provided URL.');
+                };
+                img.src = urlInput.value;
+            } else {
+                alert('Please enter a valid image URL');
+            }
+        }
+
+        function resetProfile() {
+            const defaultProfile = '@profileUrl';
+            document.getElementById('profilePreview').src = defaultProfile;
+            document.getElementById('profileFile').value = '';
+            document.getElementById('profileUrlInput').value = '';
+            document.getElementById('Profile_Picture').value = defaultProfile;
+        }
+    </script>
+</body>
+</html>

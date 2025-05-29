@@ -84,22 +84,21 @@ namespace BookApp3.Controllers
                 return NotFound();
             }
 
-            // Update basic properties
             book.Title = model.Title;
             book.Description = model.Description;
             book.Author_Id = model.Author_Id;
             book.Page_Count = model.Page_Count;
             book.First_Publish = model.First_Publish;
 
-            // Handle cover image update
+          
             if (coverFile != null && coverFile.Length > 0)
             {
-                // Save the new file and update the URL
+             
                 book.Cover_Url = await SaveFile(coverFile, "book-covers");
             }
             else if (!string.IsNullOrEmpty(model.Cover_Url))
             {
-                // Use the URL from the hidden field (could be from URL input or reset)
+               
                 book.Cover_Url = model.Cover_Url;
             }
 
