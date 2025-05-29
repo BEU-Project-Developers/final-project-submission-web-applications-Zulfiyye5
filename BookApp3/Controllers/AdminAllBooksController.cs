@@ -182,6 +182,70 @@ namespace BookApp3.Controllers
 
             return $"/uploads/{folderName}/{uniqueFileName}";
         }
+        public IActionResult Add()
+        {
+            ViewBag.Authors = _context.Authors
+                .Select(a => new SelectListItem
+                {
+                    Value = a.Author_id.ToString(),
+                    Text = a.Name
+                })
+                .ToList();
 
+            return View(new BookViewModel());
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Add(BookViewModel model, IFormFile coverImage)
+        {
+            // Repopulate authors dropdown if validation fails
+            ViewBag.Authors = _context.Authors
+                .Select(a => new SelectListItem
+                {
+                    Value = a.Author_id.ToString(),
+                    Text = a.Name
+                })
+                .ToList();
+
+
+      
+            string coverUrl = null;
+
+            if (coverImage != null && coverImage.Length > 0)
+            {
+               
+                coverUrl = await SaveFile(coverImage, "book-covers");
+            }
+            else if (!string.IsNullOrEmpty(model.Cover_Url))
+            {
+                
+                coverUrl = model.Cover_Url;
+            }
+
+            var newBook = new Book
+            {
+                Title = model.Title,
+                Description = model.Description,
+                Author_Id = model.Author_Id, 
+                Page_Count = model.Page_Count,
+                First_Publish = model.First_Publish,
+                Cover_Url = coverUrl
+            };
+
+            try
+            {
+                _context.Books.Add(newBook);
+                await _context.SaveChangesAsync();
+
+                TempData["SuccessMessage"] = "Book added successfully!";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "An error occurred while saving: " + ex.Message);
+                return View(model);
+            }
+        }
     }
+    
 }

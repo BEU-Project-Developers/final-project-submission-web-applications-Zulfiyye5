@@ -1,0 +1,552 @@
+﻿@model BookApp3.ViewModels.BookViewModel
+@{
+    ViewData["Title"] = "Add New Book";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --deep-blue: #1a2a3a;
+            --moonlight: #f0f4f8;
+            --lavender: #b4b4ff;
+            --gold: #ffd700;
+            --accent: #ff9aa2;
+            --brown: #8B4513;
+            --text-primary: #333;
+            --text-secondary: #666;
+            --border: rgba(180, 180, 255, 0.2);
+            --surface: rgba(255, 255, 255, 0.05);
+            --elevated: rgba(255, 255, 255, 0.1);
+            --accent-light: #ffb7bd;
+        }
+
+        body {
+            background-color: var(--deep-blue);
+            color: var(--moonlight);
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Playfair Display', serif;
+            color: var(--moonlight);
+        }
+
+        .form-container {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-top: 2rem;
+            border: 1px solid var(--border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-label {
+            color: var(--lavender);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control, .form-select {
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border);
+            color: var(--moonlight);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+        }
+
+            .form-control:focus, .form-select:focus {
+                background-color: rgba(255, 255, 255, 0.15);
+                border-color: var(--accent);
+                color: var(--moonlight);
+                box-shadow: 0 0 0 0.25rem rgba(255, 154, 162, 0.25);
+            }
+
+        .btn-submit {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+            .btn-submit:hover {
+                background-color: #ff7b8a;
+                transform: translateY(-3px);
+                box-shadow: 0 8px 15px rgba(255, 154, 162, 0.3);
+            }
+
+        .btn-back {
+            color: var(--moonlight);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            transition: color 0.3s;
+        }
+
+            .btn-back:hover {
+                color: var(--accent);
+            }
+
+        .preview-image {
+            max-width: 200px;
+            max-height: 300px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .image-options {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .image-option {
+            flex: 1;
+        }
+
+        .upload-container {
+            text-align: center;
+            padding: 1.5rem;
+            background-color: rgba(180, 180, 255, 0.1);
+            border: 2px dashed var(--lavender);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            height: 100%;
+        }
+
+            .upload-container:hover {
+                background-color: rgba(180, 180, 255, 0.2);
+            }
+
+        .upload-icon {
+            font-size: 2rem;
+            color: var(--lavender);
+            margin-bottom: 1rem;
+        }
+
+        .option-title {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .divider {
+            text-align: center;
+            margin: 2rem 0;
+            position: relative;
+            color: var(--lavender);
+        }
+
+            .divider::before,
+            .divider::after {
+                content: "";
+                flex: 1;
+                border-bottom: 1px solid var(--border);
+                position: absolute;
+                top: 50%;
+                width: 42%;
+            }
+
+            .divider::before {
+                right: 52%;
+            }
+
+            .divider::after {
+                left: 52%;
+            }
+
+        .switch-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+            .switch input {
+                opacity: 0;
+                width: 0;
+                height: 0;
+            }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--lavender);
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+            .slider:before {
+                position: absolute;
+                content: "";
+                height: 26px;
+                width: 26px;
+                left: 4px;
+                bottom: 4px;
+                background-color: white;
+                transition: .4s;
+                border-radius: 50%;
+            }
+
+        input:checked + .slider {
+            background-color: var(--accent);
+        }
+
+        input:focus + .slider {
+            box-shadow: 0 0 1px var(--accent);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        .switch-label {
+            margin: 0 15px;
+            font-weight: 600;
+            color: var(--moonlight);
+            display: flex;
+            align-items: center;
+        }
+
+        .preview-container {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .preview-title {
+            font-size: 0.9rem;
+            color: var(--lavender);
+            margin-bottom: 0.5rem;
+        }
+
+        .hidden-section {
+            display: none;
+        }
+
+        .active-section {
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .field-validation-error {
+            color: var(--accent);
+            font-size: 0.85rem;
+            margin-top: -1rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .validation-summary-errors {
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background-color: rgba(255, 154, 162, 0.1);
+            border-radius: 8px;
+            border-left: 4px solid var(--accent);
+        }
+
+        /* Custom Success Popup */
+        .success-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #1a2a3a 0%, #2c3e50 100%);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--accent);
+            z-index: 1000;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .success-popup.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .success-popup i {
+            font-size: 3rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+            animation: bounce 0.6s ease;
+        }
+
+        .success-popup h3 {
+            font-family: 'Playfair Display', serif;
+            color: var(--gold);
+            margin-bottom: 1rem;
+        }
+
+        .success-popup p {
+            margin-bottom: 1.5rem;
+        }
+
+        .success-popup .progress-bar {
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+
+        .success-popup .progress {
+            height: 100%;
+            width: 100%;
+            background: var(--accent);
+            animation: progress 3s linear forwards;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+  
+    </style>
+</head>
+<body>
+    <div class="container py-4">
+        <a href="@Url.Action("Index", "AdminAllBooks")" class="btn-back">
+            <i class="fas fa-arrow-left me-2"></i> Back to All Books
+        </a>
+
+        <h1 class="mb-4"><i class="fas fa-plus-circle me-3"></i> Add New Book</h1>
+
+        <div asp-validation-summary="ModelOnly" class="validation-summary-errors"></div>
+
+        <div class="form-container">
+            <form asp-action="Add" method="post" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
+
+                <div class="switch-container">
+                    <span class="switch-label"><i class="fas fa-link me-2"></i> URL</span>
+                    <label class="switch">
+                        <input type="checkbox" id="imageSourceToggle">
+                        <span class="slider"></span>
+                    </label>
+                    <span class="switch-label"><i class="fas fa-upload me-2"></i> Upload</span>
+                </div>
+
+                <div id="urlSection" class="active-section">
+                    <div class="mb-3">
+                        <label asp-for="Cover_Url" class="form-label">Cover Image URL</label>
+                        <input type="url" class="form-control" asp-for="Cover_Url" 
+                               placeholder="https://example.com/book-cover.jpg">
+                        <span asp-validation-for="Cover_Url" class="field-validation-error"></span>
+                        <div class="preview-container">
+                            <div class="preview-title">URL Preview</div>
+                            <img id="urlPreview" class="preview-image" src="#" alt="URL preview" />
+                        </div>
+                    </div>
+                </div>
+
+                <div id="uploadSection" class="hidden-section">
+                    <div class="mb-3">
+                        <label class="form-label">Upload Cover Image</label>
+                        <div class="upload-container" onclick="document.getElementById('coverImage').click()">
+                            <div class="upload-icon">
+                                <i class="fas fa-file-image"></i>
+                            </div>
+                            <div>Click to select an image file</div>
+                            <input type="file" id="coverImage" name="coverImage" accept="image/*" style="display: none;" />
+                        </div>
+                        <div class="preview-container">
+                            <div class="preview-title">Upload Preview</div>
+                            <img id="uploadPreview" class="preview-image" src="#" alt="Upload preview" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label asp-for="Title" class="form-label">Book Title</label>
+                            <input type="text" class="form-control" asp-for="Title" required>
+                            <span asp-validation-for="Title" class="field-validation-error"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Author_Id" class="form-label">Author</label>
+                            <select class="form-select" asp-for="Author_Id" asp-items="@(new SelectList(ViewBag.Authors, "Value", "Text"))" required>
+                                <option value="">Select Author</option>
+                            </select>
+                            <span asp-validation-for="Author_Id" class="field-validation-error"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="First_Publish" class="form-label">First Published</label>
+                            <input type="date" class="form-control" asp-for="First_Publish">
+                            <span asp-validation-for="First_Publish" class="field-validation-error"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label asp-for="Page_Count" class="form-label">Page Count</label>
+                            <input type="number" class="form-control" asp-for="Page_Count" min="1">
+                            <span asp-validation-for="Page_Count" class="field-validation-error"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Description" class="form-label">Description</label>
+                    <textarea class="form-control" asp-for="Description" rows="5"></textarea>
+                    <span asp-validation-for="Description" class="field-validation-error"></span>
+                </div>
+
+                <button type="submit" class="btn btn-submit">
+                    <i class="fas fa-save me-2"></i> Add Book
+                </button>
+            </form>
+        </div>
+    </div>
+
+
+    <div class="overlay" id="successOverlay"></div>
+    <div class="success-popup" id="successPopup">
+        <i class="fas fa-check-circle"></i>
+        <h3>Success!</h3>
+        <p>Your book has been added successfully.</p>
+        <p>Redirecting to books list...</p>
+        <div class="progress-bar">
+            <div class="progress"></div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Toggle between URL and file upload sections
+        document.getElementById('imageSourceToggle').addEventListener('change', function() {
+            const urlSection = document.getElementById('urlSection');
+            const uploadSection = document.getElementById('uploadSection');
+
+            if (this.checked) {
+                urlSection.classList.remove('active-section');
+                urlSection.classList.add('hidden-section');
+                uploadSection.classList.remove('hidden-section');
+                uploadSection.classList.add('active-section');
+            } else {
+                uploadSection.classList.remove('active-section');
+                uploadSection.classList.add('hidden-section');
+                urlSection.classList.remove('hidden-section');
+                urlSection.classList.add('active-section');
+            }
+        });
+
+        // URL preview functionality
+        document.getElementById('Cover_Url').addEventListener('input', function() {
+            const url = this.value.trim();
+            const preview = document.getElementById('urlPreview');
+
+            if (url) {
+                preview.src = url;
+                preview.style.display = 'block';
+
+                preview.onerror = function() {
+                    preview.style.display = 'none';
+                };
+            } else {
+                preview.style.display = 'none';
+            }
+        });
+
+        // File upload preview functionality
+        document.getElementById('coverImage').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            const preview = document.getElementById('uploadPreview');
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+            } else {
+                preview.style.display = 'none';
+            }
+        });
+
+        // Initialize date input to today if empty
+        document.addEventListener('DOMContentLoaded', function() {
+            const dateInput = document.getElementById('First_Publish');
+            if (dateInput && !dateInput.value) {
+                const today = new Date().toISOString().split('T')[0];
+                dateInput.value = today;
+            }
+
+            // Show success popup if book was added
+            const successMessage = '@(TempData["SuccessMessage"] ?? "")';
+            if (successMessage) {
+                showSuccessPopup();
+            }
+        });
+
+        // Success popup with auto-redirect
+        function showSuccessPopup() {
+            const overlay = document.getElementById('successOverlay');
+            const popup = document.getElementById('successPopup');
+            
+            overlay.classList.add('active');
+            popup.classList.add('active');
+
+            // Redirect after 3 seconds
+            setTimeout(function() {
+                window.location.href = '@Url.Action("Index", "AdminAllBooks")';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

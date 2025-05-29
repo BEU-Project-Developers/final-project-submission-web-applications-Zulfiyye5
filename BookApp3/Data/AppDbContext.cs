@@ -23,6 +23,9 @@ namespace BookApp3.Data
             modelBuilder.Entity<Book>()
                 .HasKey(b => b.Book_Id);
 
+            modelBuilder.Entity<Author>()
+                .Property(a => a.Author_id)
+                .ValueGeneratedOnAdd();
             modelBuilder.Entity<Book>()
                 .HasOne(b => b.Author)
                 .WithMany(a => a.Books)

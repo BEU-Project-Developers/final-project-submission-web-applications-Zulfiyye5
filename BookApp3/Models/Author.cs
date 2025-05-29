@@ -4,8 +4,6 @@ namespace BookApp3.Models
     public class Author
     {
         [Key]
-     
-
         public int Author_id { get; set; }
         public string Born_Loc { get; set; }
         public string Born_Date { get; set; }
