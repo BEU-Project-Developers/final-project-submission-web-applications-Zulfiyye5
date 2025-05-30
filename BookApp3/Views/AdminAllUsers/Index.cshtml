@@ -142,11 +142,11 @@
             color: var(--moonlight);
             border: 1px solid var(--border);
         }
-
+        
         .modal-header {
             border-bottom: 1px solid var(--border);
         }
-
+        
         .modal-footer {
             border-top: 1px solid var(--border);
         }
@@ -203,17 +203,22 @@
                                 {
                                     <p class="mb-3">@user.Bio</p>
                                 }
-
                                 <div class="user-stats">
                                     <div class="stat-item">
-                                        <div class="stat-value">@(user.Reviews?.Count ?? 0)</div>
-                                        <div class="stat-label">Reviews</div>
+                                        <div class="stat-value">@(user.Reviews?.Count(r => !string.IsNullOrEmpty(r.Review_Text)) ?? 0)</div>
+                                        <div class="stat-label">Text Reviews</div>
                                     </div>
                                     <div class="stat-item">
-                                        <div class="stat-value">@(user.Birthdate?.ToString("yyyy-MM-dd") ?? "N/A")</div>
+                                        <div class="stat-value">@(user.Reviews?.Count(r => r.Rating > 0) ?? 0)</div>
+                                        <div class="stat-label">Ratings Given</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-value">@((user.Birthdate?.ToString("yyyy-MM-dd")) ?? "N/A")</div>
                                         <div class="stat-label">Birthdate</div>
                                     </div>
                                 </div>
+
+
 
                                 <div class="d-flex justify-content-center action-buttons">
                                     @* <a asp-action="Edit" asp-route-id="@user.User_Id" *@
@@ -272,7 +277,7 @@
             const searchButton = document.getElementById('searchButton');
             const userSearch = document.getElementById('userSearch');
             const resetSearch = document.getElementById('resetSearch');
-
+            
             if (searchButton && userSearch && resetSearch) {
                 searchButton.addEventListener('click', performSearch);
                 userSearch.addEventListener('keypress', function(e) {
@@ -283,7 +288,7 @@
                     performSearch();
                 });
             }
-
+            
             function performSearch() {
                 const searchTerm = document.getElementById('userSearch').value.toLowerCase();
                 document.querySelectorAll('.user-card').forEach(card => {

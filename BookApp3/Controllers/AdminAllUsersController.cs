@@ -13,7 +13,9 @@ namespace BookApp3.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            var users = await _context.Users.ToListAsync();
+            var users = await _context.Users
+        .Include(u => u.Reviews)  
+        .ToListAsync();
             return View(users);
         }
         [HttpPost]

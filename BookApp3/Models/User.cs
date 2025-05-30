@@ -21,7 +21,7 @@ namespace BookApp3.Models
 
         public DateTime? JoinedIn { get;set;}
 
-        public ICollection<Review> Reviews { get; set; }
+        public ICollection<Review> Reviews { get; set; } = new List<Review>();
         public ICollection<UserBooks> UserBooks { get; set; }
         public User()
         {
