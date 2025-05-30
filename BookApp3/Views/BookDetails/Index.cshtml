@@ -1,4 +1,5 @@
-﻿@{
+﻿@using System.Globalization
+@{
     ViewData["Title"] = "Book details";
     var id = Model.Book_Id;
     var title = Model?.Title ?? "Untitled Book";
@@ -263,44 +264,46 @@
                 </section>
 
                 <h3>User Reviews</h3>
-                <div class="all-ratings">
-                    <div class="rate">
-                        <p>5 stars</p>
-                        <div class="progress-container">
-                            <div class="progress-bar star5" style="width: 45%;"></div>
-                        </div>
-                    </div>
-                    <div class="rate">
-                        <p>4 stars</p>
-                        <div class="progress-container">
-                            <div class="progress-bar star4" style="width: 35%;"></div>
-                        </div>
-                    </div>
-                    <div class="rate">
-                        <p>3 stars</p>
-                        <div class="progress-container">
-                            <div class="progress-bar star3" style="width: 15%;"></div>
-                        </div>
-                    </div>
-                    <div class="rate">
-                        <p>2 stars</p>
-                        <div class="progress-container">
-                            <div class="progress-bar star2" style="width: 10%;"></div>
-                        </div>
-                    </div>
-                    <div class="rate">
-                        <p>1 star</p>
-                        <div class="progress-container">
-                            <div class="progress-bar star1" style="width: 5%;"></div>
-                        </div>
-                    </div>
-                </div>
+                @* <div class="all-ratings"> *@
+                @*     <div class="rate"> *@
+                @*         <p>5 stars</p> *@
+                @*         <div class="progress-container"> *@
+                @*             <div class="progress-bar star5" style="width: 45%;"></div> *@
+                @*         </div> *@
+                @*     </div> *@
+                @*     <div class="rate"> *@
+                @*         <p>4 stars</p> *@
+                @*         <div class="progress-container"> *@
+                @*             <div class="progress-bar star4" style="width: 35%;"></div> *@
+                @*         </div> *@
+                @*     </div> *@
+                @*     <div class="rate"> *@
+                @*         <p>3 stars</p> *@
+                @*         <div class="progress-container"> *@
+                @*             <div class="progress-bar star3" style="width: 15%;"></div> *@
+                @*         </div> *@
+                @*     </div> *@
+                @*     <div class="rate"> *@
+                @*         <p>2 stars</p> *@
+                @*         <div class="progress-container"> *@
+                @*             <div class="progress-bar star2" style="width: 10%;"></div> *@
+                @*         </div> *@
+                @*     </div> *@
+                @*     <div class="rate"> *@
+                @*         <p>1 star</p> *@
+                @*         <div class="progress-container"> *@
+                @*             <div class="progress-bar star1" style="width: 5%;"></div> *@
+                @*         </div> *@
+                @*     </div> *@
+                @* </div> *@
 
                 <div class="reviews">
                     @if (Model?.Reviews != null)
                     {
                         @foreach (var review in reviews)
                         {
+                            @if (@review.Review_Text != null)
+                            {
                             <div class="review">
                                 <div class="user-info">
                                     <div class="user-profile">
@@ -322,10 +325,16 @@
                                         }
                                     }
                                    </div>
+                                  
                                     <p>@review.Review_Text</p>
-                                    <div class="review-date">Posted on March 15, 2023</div>
+
+                                    <div class="review-date">
+                                        Posted on @((review.Created_At ?? DateTime.Now).ToString("MMMM dd, yyyy", CultureInfo.InvariantCulture))
+                                    </div>
+                                   
                                 </div>
                             </div>
+                            }
                         }
                     }
                     else

@@ -197,7 +197,6 @@ namespace BookApp3.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Add(BookViewModel model, IFormFile coverImage)
         {
-            // Repopulate authors dropdown if validation fails
             ViewBag.Authors = _context.Authors
                 .Select(a => new SelectListItem
                 {

@@ -104,13 +104,13 @@ namespace BookApp3.Controllers
                     return NotFound();
                 }
 
-                // Handle profile picture update
+               
                 if (model.ProfileImageFile != null && model.ProfileImageFile.Length > 0)
                 {
-                    // Save new file and update URL
+                 
                     var newProfilePictureUrl = await SaveFile(model.ProfileImageFile, "author-profiles");
 
-                    // Delete old file if it exists and isn't the default
+                  
                     if (!string.IsNullOrEmpty(author.Profile_Picture) &&
                         !author.Profile_Picture.StartsWith("/images/default-"))
                     {
@@ -122,11 +122,11 @@ namespace BookApp3.Controllers
                 else if (!string.IsNullOrEmpty(model.Profile_Picture) &&
                          model.Profile_Picture != author.Profile_Picture)
                 {
-                    // URL was manually changed
+                    
                     author.Profile_Picture = model.Profile_Picture;
                 }
 
-                // Update other properties
+              
                 author.Name = model.Name;
                 author.Born_Loc = model.Born_Loc;
                 author.Born_Date = model.Born_Date;
@@ -164,14 +164,14 @@ namespace BookApp3.Controllers
                 return NotFound();
             }
 
-            // Check if author has any books before deleting
+          
             if (author.Books != null && author.Books.Any())
             {
                 TempData["ErrorMessage"] = "Cannot delete author because they have associated books. Please delete the books first.";
                 return RedirectToAction(nameof(Index));
             }
 
-            // Delete profile picture if it exists and isn't the default
+           
             if (!string.IsNullOrEmpty(author.Profile_Picture) &&
                 !author.Profile_Picture.StartsWith("/images/default-"))
             {
