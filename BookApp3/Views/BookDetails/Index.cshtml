@@ -136,6 +136,40 @@
             .show-more-btn:hover {
                 text-decoration: underline;
             }
+
+        .review-text-container {
+            position: relative;
+        }
+
+        .review-text {
+            max-height: 4.5em;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            transition: max-height 0.3s ease;
+            margin-bottom: 5px;
+        }
+
+            .review-text.expanded {
+                max-height: 1000px;
+                -webkit-line-clamp: unset;
+            }
+
+        .review-show-more-btn {
+            background: none;
+            border: none;
+            color: var(--accent);
+            cursor: pointer;
+            padding: 0;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+
+            .review-show-more-btn:hover {
+                text-decoration: underline;
+            }
     </style>
 </head>
 
@@ -305,7 +339,7 @@
                                         <div class="user-profile">
                                             <img src="@review.User.Profile_Picture" alt="User profile">
                                         </div>
-                                        <div class="@review.User.User_Name">@review.User.User_Name</div>
+                                        <div class="user-name">@review.User.User_Name</div>
                                     </div>
                                     <div class="review-content">
                                         <div class="stars-container">
@@ -315,7 +349,6 @@
                                                 {
                                                     <span class="stars filled">★</span>
                                                 }
-
                                                 @for (int i = 0; i < 5 - review.Rating; i++)
                                                 {
                                                     <span class="stars empty">☆</span>
@@ -323,7 +356,13 @@
                                             }
                                         </div>
 
-                                        <p>@review.Review_Text</p>
+                                        <div class="review-text-container">
+                                            <p class="review-text">@review.Review_Text</p>
+                                            @if (review.Review_Text.Length > 200)
+                                            {
+                                                <button class="review-show-more-btn" onclick="toggleReviewText(this)">Show more</button>
+                                            }
+                                        </div>
 
                                         <div class="review-date">
                                             Posted on @((review.Created_At ?? DateTime.Now).ToString("MMMM dd, yyyy", CultureInfo.InvariantCulture))
@@ -422,6 +461,15 @@
             if (event.target === popup) {
                 popup.style.display = "none";
             }
+        }
+                function toggleReviewText(button) {
+            const container = button.closest('.review-text-container');
+            const textElement = container.querySelector('.review-text');
+            textElement.classList.toggle('expanded');
+
+            button.textContent = textElement.classList.contains('expanded')
+                ? 'Show less'
+                : 'Show more';
         }
     </script>
 </body>
