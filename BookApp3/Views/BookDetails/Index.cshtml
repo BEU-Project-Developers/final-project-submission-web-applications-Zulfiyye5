@@ -22,103 +22,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <link rel="preconnected" href="https://fonts.googleapis.com">
-    <link rel="preconnected" href="https://fonts.gstatic.com" crossorigin>
+    <title>@title - Book Details</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="~/css/bdetail.css?v=1.1" />
+    <style>
+        .popup {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(26, 42, 58, 0.8);
+            backdrop-filter: blur(5px);
+        }
 
+        .popup-content {
+            background-color: var(--deep-blue);
+            margin: 15% auto;
+            padding: 30px;
+            border: 1px solid var(--lavender);
+            width: 30%;
+            min-width: 300px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            color: var(--moonlight);
+        }
+
+        .popup h2 {
+            color: var(--gold);
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 25px;
+            font-size: 1.5rem;
+        }
+
+        .shelf-buttons {
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .shelf-button {
+            padding: 14px;
+            border: 2px solid var(--lavender);
+            border-radius: 999px;
+            font-size: 16px;
+            background-color: transparent;
+            color: var(--moonlight);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+        }
+
+            .shelf-button:hover {
+                background-color: rgba(184, 184, 255, 0.2);
+                transform: translateY(-2px);
+            }
+
+        .close-btn {
+            color: var(--moonlight);
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s;
+            line-height: 1;
+        }
+
+            .close-btn:hover {
+                color: var(--accent);
+            }
+
+        /* Show More/Less Styles */
+        .book-description-container {
+            position: relative;
+        }
+
+        .book-description {
+            max-height: 4.5em;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            transition: max-height 0.3s ease;
+        }
+
+            .book-description.expanded {
+                max-height: 1000px;
+                -webkit-line-clamp: unset;
+            }
+
+        .show-more-btn {
+            background: none;
+            border: none;
+            color: var(--accent);
+            cursor: pointer;
+            padding: 5px 0;
+            font-weight: 600;
+            display: inline-block;
+            margin-top: 5px;
+        }
+
+            .show-more-btn:hover {
+                text-decoration: underline;
+            }
+    </style>
 </head>
-<style>
-    .popup {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(26, 42, 58, 0.8); 
-    backdrop-filter: blur(5px);
-    }
-
-    .popup-content {
-    background-color: var(--deep-blue);
-    margin: 15% auto;
-    padding: 30px;
-    border: 1px solid var(--lavender);
-    width: 30%;
-    min-width: 300px;
-    border-radius: 15px;
-    text-align: center;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    color: var(--moonlight);
-    }
-
-    .popup h2 {
-    color: var(--gold);
-    font-family: 'Playfair Display', serif;
-    margin-bottom: 25px;
-    font-size: 1.5rem;
-    }
-
-    .shelf-buttons {
-    margin-top: 30px;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    }
-
-    .shelf-button {
-    padding: 14px;
-    border: 2px solid var(--lavender);
-    border-radius: 999px;
-    font-size: 16px;
-    background-color: transparent;
-    color: var(--moonlight);
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 600;
-    }
-
-    .shelf-button:hover {
-    background-color: rgba(184, 184, 255, 0.2);
-    transform: translateY(-2px);
-    }
-
-    .close-btn {
-    color: var(--moonlight);
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: color 0.3s;
-    line-height: 1;
-    }
-
-    .close-btn:hover {
-    color: var(--accent);
-    }
-</style>
 
 <body>
-
     <div id="popupWindow" class="popup">
         <div class="popup-content">
             <span class="close-btn" onclick="closePopup()">&times;</span>
-            <h2 >Choose a shelf for this book</h2>
+            <h2>Choose a shelf for this book</h2>
             @using (Html.BeginForm("UpdateShelf", "BookDetails", FormMethod.Post))
             {
                 <div class="shelf-buttons">
                     <input type="hidden" name="bookId" value="@Model.Book_Id" />
                     <button class="shelf-button" type="submit" name="shelfType" value="want-to-read">Want to Read</button>
-                    <button class="shelf-button" n type="submit" name="shelfType" value="currently-reading">Currently Reading</button>
+                    <button class="shelf-button" type="submit" name="shelfType" value="currently-reading">Currently Reading</button>
                     <button class="shelf-button" name="shelfType" value="read" class="shelf-button">Read</button>
-                    @if (!string.IsNullOrEmpty(bookStatus)){
+                    @if (!string.IsNullOrEmpty(bookStatus))
+                    {
                         <button class="shelf-button" type="submit" name="shelfType" value="remove">Remove from Shelf</button>
                     }
                 </div>
@@ -170,7 +204,6 @@
                         }
                     }
 
-
                     <div class="rating-widget">
                         <div class="stars">
                             @if (isSignedIn)
@@ -186,7 +219,6 @@
                                             if (userRating.HasValue && i <= userRating.Value)
                                             {
                                                 <i class="fas fa-star star filled" data-rating="@i"></i>
-
                                             }
                                             else
                                             {
@@ -196,7 +228,7 @@
                                     </div>
                                 </form>
                                 <div class="rate-text">
-                                    @if (userRating.HasValue && userRating!=0)
+                                    @if (userRating.HasValue && userRating != 0)
                                     {
                                         <div>You rated this @userRating.Value star@(userRating.Value > 1 ? "s" : "")</div>
                                         @using (Html.BeginForm("ClearRating", "BookDetails", FormMethod.Post))
@@ -204,7 +236,6 @@
                                             <input type="hidden" name="bookId" value="@Model.Book_Id" />
                                             <button type="submit" class="clear-rating">Clear</button>
                                         }
-                          
                                     }
                                     else
                                     {
@@ -222,30 +253,31 @@
                             }
                         </div>
                     </div>
-                
-
-
-
                 </div>
             </section>
 
             <section class="right-column">
                 <div class="details">
-
                     <div class="book-header">
                         <h2 class="book-title">@title</h2>
-                        <a class="author-link" href="@Url.Action("Index", "AuthorInfo", new { id = author.Author_id })" >
-                            <h3 class="author-name">By @author.Name</h3></a>
-                       
+                        <a class="author-link" href="@Url.Action("Index", "AuthorInfo", new { id = author.Author_id })">
+                            <h3 class="author-name">By @author.Name</h3>
+                        </a>
                     </div>
-
 
                     <div class="book-meta">
                         <span>📅 @firstPublish</span>
                         <span>📖 @pageCount pages</span>
                         <span>⭐ @(ViewData["AverageRating"]?.ToString() ?? "0.0")/5</span>
                     </div>
-                    <p class="description">@description</p>
+
+                    <div class="book-description-container">
+                        <p class="book-description" id="bookDescription">@description</p>
+                        @if (description.Length > 250)
+                        {
+                            <button class="show-more-btn" id="showMoreBtn">Show more</button>
+                        }
+                    </div>
                 </div>
 
                 <section class="rating">
@@ -254,48 +286,13 @@
                     {
                         <a href="@Url.Action("Index", "AddReview", new { id = id})" class="custom-button">Write Review</a>
                     }
-                    else{
+                    else
+                    {
                         <a href="@Url.Action("SignIn", "Account")" class="custom-button">Write Review</a>
                     }
-
-                  
-
                 </section>
 
                 <h3>User Reviews</h3>
-                @* <div class="all-ratings"> *@
-                @*     <div class="rate"> *@
-                @*         <p>5 stars</p> *@
-                @*         <div class="progress-container"> *@
-                @*             <div class="progress-bar star5" style="width: 45%;"></div> *@
-                @*         </div> *@
-                @*     </div> *@
-                @*     <div class="rate"> *@
-                @*         <p>4 stars</p> *@
-                @*         <div class="progress-container"> *@
-                @*             <div class="progress-bar star4" style="width: 35%;"></div> *@
-                @*         </div> *@
-                @*     </div> *@
-                @*     <div class="rate"> *@
-                @*         <p>3 stars</p> *@
-                @*         <div class="progress-container"> *@
-                @*             <div class="progress-bar star3" style="width: 15%;"></div> *@
-                @*         </div> *@
-                @*     </div> *@
-                @*     <div class="rate"> *@
-                @*         <p>2 stars</p> *@
-                @*         <div class="progress-container"> *@
-                @*             <div class="progress-bar star2" style="width: 10%;"></div> *@
-                @*         </div> *@
-                @*     </div> *@
-                @*     <div class="rate"> *@
-                @*         <p>1 star</p> *@
-                @*         <div class="progress-container"> *@
-                @*             <div class="progress-bar star1" style="width: 5%;"></div> *@
-                @*         </div> *@
-                @*     </div> *@
-                @* </div> *@
-
                 <div class="reviews">
                     @if (Model?.Reviews != null)
                     {
@@ -303,36 +300,36 @@
                         {
                             @if (@review.Review_Text != null)
                             {
-                            <div class="review">
-                                <div class="user-info">
-                                    <div class="user-profile">
-                                        <img src="@review.User.Profile_Picture" alt="User profile">
+                                <div class="review">
+                                    <div class="user-info">
+                                        <div class="user-profile">
+                                            <img src="@review.User.Profile_Picture" alt="User profile">
+                                        </div>
+                                        <div class="@review.User.User_Name">@review.User.User_Name</div>
                                     </div>
-                                    <div class="@review.User.User_Name">@review.User.User_Name</div>
-                                </div>
-                                <div class="review-content">
-                                    <div class="stars-container">
-                                    @if(review.Rating!=0){
-                                        @for (int i = 0; i < review.Rating; i++)
-                                        {
-                                            <span class="stars filled">★</span>
-                                        }
+                                    <div class="review-content">
+                                        <div class="stars-container">
+                                            @if (review.Rating != 0)
+                                            {
+                                                @for (int i = 0; i < review.Rating; i++)
+                                                {
+                                                    <span class="stars filled">★</span>
+                                                }
 
-                                        @for (int i = 0; i < 5 - review.Rating; i++)
-                                        {
-                                            <span class="stars empty">☆</span>
-                                        }
-                                    }
-                                   </div>
-                                  
-                                    <p>@review.Review_Text</p>
+                                                @for (int i = 0; i < 5 - review.Rating; i++)
+                                                {
+                                                    <span class="stars empty">☆</span>
+                                                }
+                                            }
+                                        </div>
 
-                                    <div class="review-date">
-                                        Posted on @((review.Created_At ?? DateTime.Now).ToString("MMMM dd, yyyy", CultureInfo.InvariantCulture))
+                                        <p>@review.Review_Text</p>
+
+                                        <div class="review-date">
+                                            Posted on @((review.Created_At ?? DateTime.Now).ToString("MMMM dd, yyyy", CultureInfo.InvariantCulture))
+                                        </div>
                                     </div>
-                                   
                                 </div>
-                            </div>
                             }
                         }
                     }
@@ -340,79 +337,78 @@
                     {
                         <p>No reviews available.</p>
                     }
-
-                 
-                  
-
-                    @* <div class="review"> *@
-                    @*     <div class="user-info"> *@
-                    @*         <div class="user-profile"> *@
-                    @*             <img src="https://i.pinimg.com/736x/ee/c3/97/eec3973f23c2860186b9c6410970988b.jpg" alt="User profile"> *@
-                    @*         </div> *@
-                    @*         <div class="username">LiteraryFan</div> *@
-                    @*     </div> *@
-                    @*     <div class="review-content"> *@
-                    @*         <span class="stars">★★★★★</span> *@
-                    @*         <p>One of the best books I've read this year! Highly recommended.</p> *@
-                    @*         <div class="review-date">Posted on February 28, 2023</div> *@
-                    @*     </div> *@
-                    @* </div> *@
                 </div>
             </section>
         </div>
     </main>
 
     <script>
+        // Rating stars functionality
         const isSignedIn = @((isSignedIn ? "true" : "false"));
         document.addEventListener('DOMContentLoaded', function() {
-           const stars = document.querySelectorAll('.star');
+            const stars = document.querySelectorAll('.star');
 
-    stars.forEach(star => {
-        star.addEventListener('click', function() {
-            if (!isSignedIn) {
-                alert('Please sign in to rate this book.');
-                return;
+            stars.forEach(star => {
+                star.addEventListener('click', function() {
+                    if (!isSignedIn) {
+                        alert('Please sign in to rate this book.');
+                        return;
+                    }
+
+                    const rating = this.getAttribute('data-rating');
+                    stars.forEach((s, index) => {
+                        if (index < rating) {
+                            s.classList.remove('far');
+                            s.classList.add('fas', 'active');
+                        } else {
+                            s.classList.remove('fas', 'active');
+                            s.classList.add('far');
+                        }
+                    });
+                });
+
+                star.addEventListener('mouseover', function() {
+                    const rating = this.getAttribute('data-rating');
+                    stars.forEach((s, index) => {
+                        if (index < rating) {
+                            s.classList.add('hover');
+                        } else {
+                            s.classList.remove('hover');
+                        }
+                    });
+                });
+
+                star.addEventListener('mouseout', function() {
+                    stars.forEach(s => {
+                        s.classList.remove('hover');
+                    });
+                });
+            });
+
+            // Submit rating form
+            document.querySelectorAll('.star').forEach(star => {
+                star.addEventListener('click', function () {
+                    const rating = this.getAttribute('data-rating');
+                    document.getElementById('ratingValue').value = rating;
+                    document.getElementById('ratingForm').submit();
+                });
+            });
+
+            // Show More/Less functionality
+            const description = document.getElementById('bookDescription');
+            const showMoreBtn = document.getElementById('showMoreBtn');
+
+            if (showMoreBtn) {
+                showMoreBtn.addEventListener('click', function() {
+                    description.classList.toggle('expanded');
+                    this.textContent = description.classList.contains('expanded')
+                        ? 'Show less'
+                        : 'Show more';
+                });
             }
-            
-            const rating = this.getAttribute('data-rating');
-            stars.forEach((s, index) => {
-                if (index < rating) {
-                    s.classList.remove('far');
-                    s.classList.add('fas', 'active');
-                } else {
-                    s.classList.remove('fas', 'active');
-                    s.classList.add('far');
-                }
-            });
         });
 
-        star.addEventListener('mouseover', function() {
-            const rating = this.getAttribute('data-rating');
-            stars.forEach((s, index) => {
-                if (index < rating) {
-                    s.classList.add('hover');
-                } else {
-                    s.classList.remove('hover');
-                }
-            });
-        });
-
-        star.addEventListener('mouseout', function() {
-            stars.forEach(s => {
-                s.classList.remove('hover');
-            });
-        });
-    });
-
-      
-
-       
-
-
-
-        });
-    </script>
-    <script>
+        // Popup window functions
         function openPopup() {
             document.getElementById("popupWindow").style.display = "block";
         }
@@ -421,7 +417,6 @@
             document.getElementById("popupWindow").style.display = "none";
         }
 
-    
         window.onclick = function(event) {
             var popup = document.getElementById("popupWindow");
             if (event.target === popup) {
@@ -429,16 +424,5 @@
             }
         }
     </script>
-    <script>
-        document.querySelectorAll('.star').forEach(star => {
-            star.addEventListener('click', function () {
-                const rating = this.getAttribute('data-rating');
-                document.getElementById('ratingValue').value = rating;
-                document.getElementById('ratingForm').submit();
-            });
-        });
-    </script>
 </body>
-
-
 </html>
