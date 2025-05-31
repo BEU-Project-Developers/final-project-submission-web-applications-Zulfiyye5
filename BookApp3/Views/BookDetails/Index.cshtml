@@ -241,10 +241,9 @@
 
 
                     <div class="book-meta">
-                        
                         <span>📅 @firstPublish</span>
                         <span>📖 @pageCount pages</span>
-                        <span>⭐ 4.5/5</span>
+                        <span>⭐ @(ViewData["AverageRating"]?.ToString() ?? "0.0")/5</span>
                     </div>
                     <p class="description">@description</p>
                 </div>

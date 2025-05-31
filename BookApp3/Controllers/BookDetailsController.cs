@@ -30,6 +30,15 @@ namespace BookApp2.Controllers
             }
 
             var userIdString = HttpContext.Session.GetString("UserId");
+            double averageRating = 0.0;
+            if (book.Reviews != null && book.Reviews.Any(r => r.Rating > 0))
+            {
+                averageRating = book.Reviews
+                    .Where(r => r.Rating > 0)
+                    .Average(r => r.Rating);
+            }
+
+            ViewData["AverageRating"] = Math.Round(averageRating, 1);
 
             if (!string.IsNullOrEmpty(userIdString) && int.TryParse(userIdString, out int userId))
             {
