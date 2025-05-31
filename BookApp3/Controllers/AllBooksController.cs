@@ -22,7 +22,26 @@ namespace BookApp3.Controllers
             var books = await _context.Books.Include(b => b.Author).ToListAsync();
             return View(books);
         }
+        public async Task<IActionResult> Search(string searchTerm)
+        {
+            if (string.IsNullOrWhiteSpace(searchTerm))
+            {
+                return RedirectToAction(nameof(Index));
+            }
 
-    
+            var searchTermLower = searchTerm.ToLower();
+
+            var books = await _context.Books
+                .Include(b => b.Author)
+                .Where(b =>
+                    (b.Title != null && b.Title.ToLower().Contains(searchTermLower)) ||
+                    (b.Description != null && b.Description.ToLower().Contains(searchTermLower)) ||
+                    (b.Author != null && b.Author.Name != null && b.Author.Name.ToLower().Contains(searchTermLower)))
+                .OrderBy(b => b.Title) 
+                .ToListAsync();
+
+            ViewBag.SearchTerm = searchTerm;
+            return View(nameof(Index), books);
+        }
     }
 }

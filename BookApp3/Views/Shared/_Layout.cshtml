@@ -16,6 +16,27 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 
 </head>
+<style>
+    .search-form {
+        display: flex;
+        align-items: center;
+    }
+
+        .search-form input[type="text"] {
+            flex: 1;
+            padding: 8px;
+            font-size: 16px;
+        }
+
+        .search-form button {
+            background: none;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+</style>
 <body>
     <nav>
         <div class="nav-bar-texts">
@@ -51,9 +72,13 @@
 
 
 
+
         <div class="search-container">
-            <input type="text" placeholder="Search books...">
-            <button style="color: var(--purple);">⌕</button>
+            <form asp-controller="AllBooks" asp-action="Search" method="get" class="search-form">
+                <input type="text" name="searchTerm" placeholder="Search books"
+                       value="@Context.Request.Query["searchTerm"]">
+                <button type="submit" style="color: var(--purple);">⌕</button>
+            </form>
         </div>
 
 
